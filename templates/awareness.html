@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awareness — WomiCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose:    #c9304a;
+            --rose-lt: #f8e6ea;
+            --rose-md: #e8a0b0;
+            --dark:    #1a1118;
+            --muted:   #6b5c63;
+            --surface: #fff8f9;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--surface);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .navbar {
+            background: var(--dark) !important;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--rose);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .navbar-brand { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #fff !important; letter-spacing: .02em; }
+        .nav-link { color: rgba(255,255,255,.75) !important; font-weight: 500; transition: color .2s; }
+        .nav-link:hover, .nav-link.active { color: var(--rose-md) !important; }
+        .dropdown-menu { background: var(--dark); border: 1px solid #3a2830; }
+        .dropdown-item { color: rgba(255,255,255,.75); }
+        .dropdown-item:hover { background: var(--rose); color: #fff; }
+
+        /* ── HERO ─────────────────────────────────────── */
+        .page-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 320px;
+            overflow: hidden;
+        }
+        .hero-left {
+            background: linear-gradient(150deg, var(--dark) 0%, #2e0f1e 100%);
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 3.5rem 4rem 3.5rem 5%;
+            position: relative; z-index: 2;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+        }
+        .hero-left::before {
+            content: ''; position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(201,48,74,.2) 0%, transparent 70%);
+            bottom: -60px; right: -30px; pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: rgba(201,48,74,.18); border: 1px solid rgba(201,48,74,.4);
+            color: var(--rose-md); padding: .3rem .85rem; border-radius: 999px;
+            font-size: .78rem; font-weight: 600; letter-spacing: .06em;
+            text-transform: uppercase; margin-bottom: 1rem; width: fit-content;
+        }
+        .hero-left h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: #fff; line-height: 1.2; margin-bottom: .8rem;
+        }
+        .hero-left h1 em { color: var(--rose-md); font-style: italic; }
+        .hero-left p { color: rgba(255,255,255,.65); font-size: .92rem; line-height: 1.7; max-width: 400px; }
+
+        .hero-right {
+            background: linear-gradient(135deg, #f9eef1 0%, #fde8ed 60%, #f5c6d0 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .hero-right::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(201,48,74,.1) 0%, transparent 65%);
+        }
+        .hero-ribbon-main {
+            font-size: 160px; color: var(--rose); position: relative; z-index: 1;
+            filter: drop-shadow(0 12px 30px rgba(180,40,70,.28));
+            animation: floatRibbon 5s ease-in-out infinite; line-height: 1;
+        }
+        @keyframes floatRibbon {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50%       { transform: translateY(-14px) rotate(3deg); }
+        }
+        .ribbon-scatter { position: absolute; color: var(--rose); pointer-events: none; }
+
+        /* ── DISCLAIMER ───────────────────────────────── */
+        .disclaimer-banner {
+            background: #fff3cd; border-left: 4px solid #e0a800;
+            padding: .75rem 1.25rem; font-size: .88rem; color: #664d03; text-align: center;
+        }
+
+        /* ── STATS BAR ────────────────────────────────── */
+        .stats-bar {
+            background: var(--dark);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #3a2830;
+        }
+        .stat-item { text-align: center; color: #fff; border-right: 1px solid rgba(255,255,255,.1); }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-family: 'DM Serif Display', serif; font-size: 1.9rem;
+            color: var(--rose-md); display: block; line-height: 1;
+        }
+        .stat-label { font-size: .76rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .07em; margin-top: .3rem; display: block; }
+
+        /* ── SHARED SECTION ───────────────────────────── */
+        .section-block { padding: 4.5rem 0; }
+        .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 2.8vw, 2.1rem); color: var(--dark); margin-bottom: .4rem; }
+        .section-subtitle { color: var(--muted); font-size: .93rem; line-height: 1.7; max-width: 580px; }
+
+        /* ── WHAT IS SECTION ──────────────────────────── */
+        .what-is-card {
+            background: var(--card-bg);
+            border: 1.5px solid #f0dde2;
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,.06);
+        }
+        .what-is-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--rose), var(--rose-md));
+        }
+        .what-is-card p { font-size: .95rem; line-height: 1.8; color: var(--dark); }
+        .what-is-card p + p { margin-top: 1rem; }
+
+        /* ── AWARENESS CARDS ──────────────────────────── */
+        .awareness-card {
+            background: var(--card-bg);
+            border: 1.5px solid #f0dde2;
+            border-radius: 16px;
+            padding: 1.6rem;
+            height: 100%;
+            transition: transform .25s, box-shadow .25s;
+            position: relative; overflow: hidden;
+        }
+        .awareness-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; background: var(--rose);
+            border-radius: 4px 0 0 4px; opacity: 0; transition: opacity .25s;
+        }
+        .awareness-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(201,48,74,.12); }
+        .awareness-card:hover::before { opacity: 1; }
+        .awareness-card .card-icon {
+            width: 46px; height: 46px; background: var(--rose-lt); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: var(--rose); margin-bottom: 1rem;
+            transition: background .25s, color .25s;
+        }
+        .awareness-card:hover .card-icon { background: var(--rose); color: #fff; }
+        .awareness-card h5 { font-family: 'DM Serif Display', serif; font-size: 1.05rem; margin-bottom: .45rem; }
+        .awareness-card p { font-size: .87rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+        /* ── CHECK LIST ───────────────────────────────── */
+        .check-list { list-style: none; padding: 0; margin: 0; }
+        .check-list li {
+            display: flex; align-items: flex-start; gap: .8rem;
+            padding: .75rem 0; border-bottom: 1px solid #f0dde2;
+            font-size: .92rem; color: var(--dark); line-height: 1.6;
+        }
+        .check-list li:last-child { border-bottom: none; }
+        .check-list li i { color: var(--rose); font-size: .85rem; margin-top: .3rem; flex-shrink: 0; }
+
+        /* ── EARLY VS LATE SECTION ────────────────────── */
+        .comparison-section {
+            background: var(--card-bg);
+            position: relative; overflow: hidden;
+        }
+        .compare-card {
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+        }
+        .compare-early {
+            background: linear-gradient(135deg, #e9f7ef, #f8fffe);
+            border: 1.5px solid #b2dfdb;
+        }
+        .compare-late {
+            background: linear-gradient(135deg, #fdecea, #fff8f9);
+            border: 1.5px solid #f0b8c4;
+        }
+        .compare-card h4 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem; margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: .6rem;
+        }
+        .compare-early h4 { color: #198754; }
+        .compare-late  h4 { color: var(--rose); }
+        .compare-item {
+            display: flex; align-items: flex-start; gap: .7rem;
+            padding: .6rem 0; border-bottom: 1px solid rgba(0,0,0,.05);
+            font-size: .88rem; line-height: 1.6;
+        }
+        .compare-item:last-child { border-bottom: none; }
+        .compare-item i { margin-top: .25rem; flex-shrink: 0; }
+
+        /* ── SCREENING SECTION ────────────────────────── */
+        .screening-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #3a1525 100%);
+            padding: 4.5rem 0;
+            position: relative; overflow: hidden;
+        }
+        .screening-section .ribbon-watermark {
+            position: absolute; right: -40px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 380px; color: rgba(255,255,255,.03);
+            pointer-events: none; line-height: 1;
+        }
+        .screening-section .section-title { color: #fff; }
+        .screening-section .section-subtitle { color: rgba(255,255,255,.65); }
+
+        .screening-card {
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 14px; padding: 1.5rem; height: 100%;
+            transition: background .25s;
+        }
+        .screening-card:hover { background: rgba(255,255,255,.12); }
+        .screening-card .sc-icon { font-size: 1.6rem; color: var(--rose-md); margin-bottom: .7rem; }
+        .screening-card h6 { font-family: 'DM Serif Display', serif; font-size: 1rem; color: #fff; margin-bottom: .4rem; }
+        .screening-card p { font-size: .83rem; color: rgba(255,255,255,.6); line-height: 1.65; margin: 0; }
+
+        /* ── HOW THIS TOOL HELPS ──────────────────────── */
+        .tool-section { background: var(--surface); }
+        .tool-step {
+            display: flex; align-items: flex-start; gap: 1.2rem;
+            padding: 1.1rem 1.3rem;
+            background: var(--card-bg);
+            border: 1.5px solid #f0dde2;
+            border-radius: 12px; margin-bottom: .85rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .tool-step:hover { border-color: var(--rose); box-shadow: 0 4px 16px rgba(201,48,74,.1); }
+        .tool-step:last-child { margin-bottom: 0; }
+        .tool-step-num {
+            width: 36px; height: 36px; background: var(--rose); color: #fff;
+            border-radius: 50%; font-family: 'DM Serif Display', serif;
+            font-size: 1rem; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .tool-step p { font-size: .9rem; color: var(--dark); line-height: 1.6; margin: 0; }
+        .tool-step strong { display: block; margin-bottom: .2rem; }
+
+        /* ── PREVENTION TIPS ──────────────────────────── */
+        .prevention-badge {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: var(--rose-lt); border: 1px solid #f0b8c4;
+            color: var(--rose); padding: .45rem 1rem; border-radius: 999px;
+            font-size: .83rem; font-weight: 500; margin: .3rem;
+            transition: background .2s, color .2s;
+        }
+        .prevention-badge:hover { background: var(--rose); color: #fff; }
+
+        /* ── CTA ──────────────────────────────────────── */
+        .cta-section {
+            background: linear-gradient(135deg, #fde8ed 0%, var(--rose-lt) 100%);
+            padding: 4.5rem 1rem; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .cta-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(201,48,74,.1) 0%, transparent 65%);
+        }
+        .cta-section h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+            color: var(--dark); margin-bottom: .6rem; position: relative;
+        }
+        .cta-section p { color: var(--muted); margin-bottom: 2rem; position: relative; }
+        .cta-buttons { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; position: relative; }
+        .btn-primary-rose {
+            background: var(--rose); color: #fff; border: none;
+            border-radius: 10px; padding: .85rem 2rem;
+            font-size: .95rem; font-weight: 600;
+            text-decoration: none; display: inline-block;
+            transition: background .2s, transform .15s, box-shadow .2s;
+        }
+        .btn-primary-rose:hover { background: #a8243c; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,48,74,.4); color: #fff; }
+        .btn-outline-rose {
+            background: transparent; color: var(--dark);
+            border: 1.5px solid #c8aab2; border-radius: 10px;
+            padding: .85rem 2rem; font-size: .95rem; font-weight: 500;
+            text-decoration: none; display: inline-block; transition: all .2s;
+        }
+        .btn-outline-rose:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+
+        /* ── FOOTER ───────────────────────────────────── */
+        footer {
+            background: var(--dark); color: rgba(255,255,255,.5);
+            text-align: center; padding: 1.75rem; font-size: .85rem;
+            border-top: 2px solid var(--rose);
+        }
+
+        /* ── SCROLL ANIMATIONS ────────────────────────── */
+        .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+        .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
+        .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
+        .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
+        .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s; }
+
+        /* ── RESPONSIVE ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-hero { grid-template-columns: 1fr; min-height: auto; }
+            .hero-left { clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%); padding: 3rem 1.5rem 4rem; }
+            .hero-right { min-height: 200px; }
+            .hero-ribbon-main { font-size: 110px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-ribbon me-2" style="color:var(--rose);"></i>WomiCare<br>
+            <sub>A Breast Cancer Detector</sub>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/predict">Check Risk</a></li>
+                <li class="nav-item"><a class="nav-link" href="/symptoms">Symptoms</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/awareness">Awareness</a></li>
+                        <li><a class="dropdown-item" href="/measurements">Measurements</a></li>
+                        <li><a class="dropdown-item" href="/about">About</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="page-hero">
+        <div class="hero-left">
+            <span class="hero-eyebrow"><i class="fa-solid fa-ribbon"></i> Education & Awareness</span>
+            <h1>Knowledge Is<br><em>Your First Shield</em></h1>
+            <p>Understanding breast cancer — what it is, how it develops, and what to watch for — is the most powerful first step toward early detection and better outcomes.</p>
+        </div>
+        <div class="hero-right">
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:42px; top:10%; left:10%; opacity:.17; transform:rotate(-14deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:28px; bottom:18%; left:16%; opacity:.13; transform:rotate(22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:36px; top:12%; right:9%; opacity:.15; transform:rotate(-20deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:22px; bottom:15%; right:13%; opacity:.12; transform:rotate(10deg);"></i>
+            <i class="fa-solid fa-ribbon hero-ribbon-main"></i>
+        </div>
+    </section>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer-banner">
+        ⚠️ This page is for <strong>educational and awareness purposes only.</strong> It does not provide medical diagnosis or treatment advice.
+    </div>
+
+    <!-- ── STATS BAR ── -->
+    <div class="stats-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="1" data-suffix=" in 8">0</span>
+                    <span class="stat-label">Lifetime Risk in Women</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="99" data-suffix="%">0%</span>
+                    <span class="stat-label">Early Stage Survival Rate</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="25" data-suffix="%">0%</span>
+                    <span class="stat-label">Of All Female Cancers</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="2" data-suffix="M+">0</span>
+                    <span class="stat-label">New Cases Per Year</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── WHAT IS BREAST CANCER ── -->
+    <div class="container section-block">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5 fade-up">
+                <h2 class="section-title">What Is Breast Cancer?</h2>
+                <p class="section-subtitle mt-2">A clear, plain-language explanation of how breast cancer develops and why early awareness matters.</p>
+            </div>
+            <div class="col-lg-7 fade-up" style="transition-delay:.12s;">
+                <div class="what-is-card">
+                    <p>Breast cancer occurs when abnormal cells in the breast begin to grow and divide uncontrollably, forming a tumor. It most commonly develops in the cells lining the milk ducts (<em>ductal carcinoma</em>) or in the lobules that supply those ducts with milk (<em>lobular carcinoma</em>).</p>
+                    <p>There are more than 18 known subtypes of breast cancer. Some — like <em>ductal carcinoma in situ (DCIS)</em> — are non-invasive and confined to the duct. Others are invasive and can spread to surrounding tissue and, if undetected, to distant organs through the bloodstream or lymphatic system.</p>
+                    <p>About 5–10% of breast cancers are linked to inherited gene mutations such as BRCA1 and BRCA2. The remaining 90–95% are caused by a combination of lifestyle, hormonal, environmental, and age-related factors.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── WHY AWARENESS MATTERS ── -->
+    <div class="section-block" style="background:#fff;">
+        <div class="container">
+            <div class="text-center fade-up mb-4">
+                <h2 class="section-title">Why Awareness Matters</h2>
+                <p class="section-subtitle mx-auto mt-1">The difference between early and late detection can be life-changing. Awareness is what makes early detection possible.</p>
+            </div>
+            <div class="row g-4 stagger">
+                <div class="col-md-6 col-lg-3">
+                    <div class="awareness-card">
+                        <div class="card-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <h5>Early Detection</h5>
+                        <p>Cancers found during screening are typically smaller and far less likely to have spread — making treatment simpler and more effective.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="awareness-card">
+                        <div class="card-icon"><i class="fa-solid fa-eye-slash"></i></div>
+                        <h5>Silent Early Stages</h5>
+                        <p>Many early-stage breast cancers cause no pain or visible symptoms at all. Most tumors are discovered through routine screening, not symptoms.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="awareness-card">
+                        <div class="card-icon"><i class="fa-solid fa-clock"></i></div>
+                        <h5>Time Is Critical</h5>
+                        <p>The 5-year survival rate for localized (early-stage) breast cancer exceeds 99%. For cancer that has spread to distant organs, it drops significantly.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="awareness-card">
+                        <div class="card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <h5>Reducing Fear</h5>
+                        <p>Awareness replaces fear with informed action. Understanding the signs and screening options helps people seek help sooner rather than waiting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── EARLY VS LATE DETECTION ── -->
+    <div class="comparison-section section-block">
+        <div class="container">
+            <div class="text-center fade-up mb-4">
+                <h2 class="section-title">Impact of Early vs Late Detection</h2>
+                <p class="section-subtitle mx-auto mt-1">The stage at which breast cancer is detected has a profound effect on treatment complexity and quality of life.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 fade-up">
+                    <div class="compare-card compare-early">
+                        <h4><i class="fa-solid fa-circle-check"></i> Early Detection</h4>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-check" style="color:#198754; margin-top:.3rem;"></i>
+                            <span>Higher treatment success rate — often curable with surgery alone</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-check" style="color:#198754; margin-top:.3rem;"></i>
+                            <span>Less aggressive treatment — may avoid chemotherapy entirely</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-check" style="color:#198754; margin-top:.3rem;"></i>
+                            <span>Breast-conserving surgery (lumpectomy) is often possible</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-check" style="color:#198754; margin-top:.3rem;"></i>
+                            <span>Better quality of life during and after treatment</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-check" style="color:#198754; margin-top:.3rem;"></i>
+                            <span>Significantly lower emotional and financial burden</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 fade-up" style="transition-delay:.12s;">
+                    <div class="compare-card compare-late">
+                        <h4><i class="fa-solid fa-triangle-exclamation"></i> Late Detection</h4>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-xmark" style="color:var(--rose); margin-top:.3rem;"></i>
+                            <span>More complex, multi-stage treatment — often chemotherapy and radiation</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-xmark" style="color:var(--rose); margin-top:.3rem;"></i>
+                            <span>Higher risk of cancer having spread to lymph nodes or distant organs</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-xmark" style="color:var(--rose); margin-top:.3rem;"></i>
+                            <span>Mastectomy (full breast removal) more likely to be required</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-xmark" style="color:var(--rose); margin-top:.3rem;"></i>
+                            <span>Lower survival rates and longer recovery periods</span>
+                        </div>
+                        <div class="compare-item">
+                            <i class="fa-solid fa-xmark" style="color:var(--rose); margin-top:.3rem;"></i>
+                            <span>Significant emotional, physical, and financial stress</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SCREENING & DETECTION ── -->
+    <section class="screening-section">
+        <i class="fa-solid fa-ribbon ribbon-watermark"></i>
+        <div class="container">
+            <div class="fade-up mb-4">
+                <h2 class="section-title">Screening & Early Detection Methods</h2>
+                <p class="section-subtitle mt-1">Screening helps detect breast cancer before symptoms appear — when it is most treatable.</p>
+            </div>
+            <div class="row g-4 stagger">
+                <div class="col-md-6 col-lg-3">
+                    <div class="screening-card">
+                        <div class="sc-icon"><i class="fa-solid fa-hands"></i></div>
+                        <h6>Self-Examination</h6>
+                        <p>Monthly self-checks help you learn what is normal for your body and notice any new changes promptly. Best done 7–10 days after your period.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="screening-card">
+                        <div class="sc-icon"><i class="fa-solid fa-stethoscope"></i></div>
+                        <h6>Clinical Breast Exam</h6>
+                        <p>A trained healthcare professional examines the breasts for lumps or abnormalities. Recommended at least every 1–3 years for women in their 20s and 30s.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="screening-card">
+                        <div class="sc-icon"><i class="fa-solid fa-x-ray"></i></div>
+                        <h6>Mammography</h6>
+                        <p>Low-dose X-ray imaging of the breast — the most common and widely recommended screening test. Recommended every 1–2 years from age 40–50 onwards.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="screening-card">
+                        <div class="sc-icon"><i class="fa-solid fa-wave-square"></i></div>
+                        <h6>Ultrasound & MRI</h6>
+                        <p>Used in specific high-risk cases, or as a follow-up to a mammogram. MRI is especially useful for women with dense breast tissue or known BRCA mutations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── PREVENTION TIPS ── -->
+    <div class="container section-block">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5 fade-up">
+                <h2 class="section-title">Prevention & Risk Reduction</h2>
+                <p class="section-subtitle mt-2">While no method guarantees prevention, these lifestyle choices are associated with lower breast cancer risk.</p>
+                <div class="mt-4 fade-up" style="transition-delay:.1s;">
+                    <span class="prevention-badge"><i class="fa-solid fa-person-running"></i> Regular physical activity</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-weight-scale"></i> Maintain healthy weight</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-wine-glass-empty"></i> Limit alcohol</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-ban-smoking"></i> Avoid smoking</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-baby"></i> Breastfeeding if possible</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-pills"></i> Discuss HRT risks with doctor</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-calendar-check"></i> Regular screening from age 40</span>
+                    <span class="prevention-badge"><i class="fa-solid fa-dna"></i> Genetic counselling if high-risk</span>
+                </div>
+            </div>
+            <div class="col-lg-7 fade-up" style="transition-delay:.15s;">
+                <h2 class="section-title">How This Tool Supports Awareness</h2>
+                <p class="section-subtitle mt-2 mb-4">RibbonAI is designed to complement awareness, not replace medical care.</p>
+                <div class="tool-step">
+                    <div class="tool-step-num">1</div>
+                    <p><strong>Data-Driven Risk Indication</strong> Our ML model analyses 13 clinical measurements from FNA biopsy reports and estimates whether the pattern is more consistent with a benign or malignant tumour.</p>
+                </div>
+                <div class="tool-step">
+                    <div class="tool-step-num">2</div>
+                    <p><strong>Encourages Medical Consultation</strong> Every result — regardless of outcome — directs users to consult a qualified healthcare professional for proper diagnosis.</p>
+                </div>
+                <div class="tool-step">
+                    <div class="tool-step-num">3</div>
+                    <p><strong>Educational Resource</strong> The platform explains what each measurement means, where it comes from, and how ML is applied in a real clinical context.</p>
+                </div>
+                <div class="tool-step">
+                    <div class="tool-step-num">4</div>
+                    <p><strong>Private & Responsible</strong> No data is stored. The tool is built for awareness — not diagnosis — and communicates that limitation clearly at every step.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+        <div class="container fade-up">
+            <h2>Take an Informed Step</h2>
+            <p>Awareness is the beginning. If you have clinical measurements, use our tool for an additional data-driven perspective — then talk to your doctor.</p>
+            <div class="cta-buttons">
+                <a href="/predict" class="btn-primary-rose">
+                    <i class="fa-solid fa-microscope me-2"></i>Check Risk Now
+                </a>
+                <a href="/symptoms" class="btn-outline-rose">Learn Symptoms</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="mb-1">Educational purpose only — not a medical diagnosis or treatment tool.</p>
+        <p class="mb-0"><i class="fa-solid fa-ribbon me-1" style="color:var(--rose);"></i> Built with care by Amritanshu Mukund</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // stat counter
+        function animateCounter(el) {
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const step = target / (1600 / 16);
+            let current = 0;
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(timer); }
+                el.textContent = Math.floor(current) + suffix;
+            }, 16);
+        }
+        const statsObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.querySelectorAll('[data-target]').forEach(animateCounter);
+                    statsObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.4 });
+        const bar = document.querySelector('.stats-bar');
+        if (bar) statsObs.observe(bar);
+
+        // scroll fade
+        const fadeObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up, .stagger').forEach(el => fadeObs.observe(el));
+    </script>
+
+</body>
+</html>

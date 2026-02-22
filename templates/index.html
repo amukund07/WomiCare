@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WomiCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose: #c9304a;
+            --rose-lt: #f8e6ea;
+            --rose-md: #e8a0b0;
+            --dark: #1a1118;
+            --muted: #6b5c63;
+            --surface: #fff8f9;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--surface);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .navbar {
+            background: var(--dark) !important;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--rose);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: #fff !important;
+            letter-spacing: .02em;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, .75) !important;
+            font-weight: 500;
+            transition: color .2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--rose-md) !important;
+        }
+
+        .dropdown-menu {
+            background: var(--dark);
+            border: 1px solid #3a2830;
+        }
+
+        .dropdown-item {
+            color: rgba(255, 255, 255, .75);
+        }
+
+        .dropdown-item:hover {
+            background: var(--rose);
+            color: #fff;
+        }
+
+        /* ── HERO — DIAGONAL SPLIT ────────────────────── */
+        .hero {
+            min-height: 92vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-left {
+            background: linear-gradient(150deg, var(--dark) 0%, #2e0f1e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem 4rem 5rem 5%;
+            position: relative;
+            z-index: 2;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+        }
+
+        .hero-left::before {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(201, 48, 74, .25) 0%, transparent 70%);
+            bottom: -80px;
+            right: -40px;
+            pointer-events: none;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(201, 48, 74, .18);
+            border: 1px solid rgba(201, 48, 74, .4);
+            color: var(--rose-md);
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 1.4rem;
+            width: fit-content;
+        }
+
+        .hero-left h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-left h1 em {
+            color: var(--rose-md);
+            font-style: italic;
+        }
+
+        .hero-left p {
+            color: rgba(255, 255, 255, .68);
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 420px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-rose {
+            background: var(--rose);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: .8rem 1.8rem;
+            font-size: .95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s, transform .15s, box-shadow .2s;
+            display: inline-block;
+        }
+
+        .btn-primary-rose:hover {
+            background: #a8243c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 48, 74, .4);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255, 255, 255, .8);
+            border: 1.5px solid rgba(255, 255, 255, .3);
+            border-radius: 10px;
+            padding: .8rem 1.8rem;
+            font-size: .95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all .2s;
+            display: inline-block;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--rose-md);
+            color: var(--rose-md);
+            transform: translateY(-2px);
+        }
+
+        /* ── HERO RIGHT ───────────────────────────────── */
+        .hero-right {
+            background: linear-gradient(135deg, #f9eef1 0%, #fde8ed 60%, #f5c6d0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(201, 48, 74, .1) 0%, transparent 65%);
+        }
+
+        /* main big ribbon in hero */
+        .hero-ribbon-main {
+            font-size: 220px;
+            color: var(--rose);
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 20px 40px rgba(180, 40, 70, .3));
+            animation: floatRibbon 5s ease-in-out infinite;
+            line-height: 1;
+        }
+
+        @keyframes floatRibbon {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-3deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(3deg);
+            }
+        }
+
+        /* scattered bg ribbons */
+        .ribbon-scatter {
+            position: absolute;
+            color: var(--rose);
+            pointer-events: none;
+        }
+
+        /* ── STATS BAR ────────────────────────────────── */
+        .stats-bar {
+            background: var(--dark);
+            padding: 1.4rem 0;
+            border-bottom: 1px solid #3a2830;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: #fff;
+            border-right: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.9rem;
+            color: var(--rose-md);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .5);
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-top: .3rem;
+            display: block;
+        }
+
+        /* ── DISCLAIMER ───────────────────────────────── */
+        .disclaimer-banner {
+            background: #fff3cd;
+            border-left: 4px solid #e0a800;
+            padding: .75rem 1.25rem;
+            font-size: .88rem;
+            color: #664d03;
+            text-align: center;
+        }
+
+        /* ── SECTIONS ─────────────────────────────────── */
+        .section-block {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: var(--dark);
+            margin-bottom: .5rem;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            font-size: .95rem;
+            max-width: 520px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+        }
+
+        /* ── FEATURE CARDS ────────────────────────────── */
+        .feature-card {
+            background: var(--card-bg);
+            border: 1.5px solid #f0dde2;
+            border-radius: 16px;
+            padding: 1.6rem;
+            height: 100%;
+            transition: transform .25s, box-shadow .25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--rose);
+            border-radius: 4px 0 0 4px;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(201, 48, 74, .13);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card .card-icon {
+            font-size: 1.9rem;
+            margin-bottom: .75rem;
+            display: block;
+        }
+
+        .feature-card h5 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: .5rem;
+        }
+
+        .feature-card p {
+            font-size: .88rem;
+            color: var(--muted);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* ── IMPORTANCE SECTION ───────────────────────── */
+        .importance-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #3a1525 100%);
+            color: #fff;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .importance-ribbon-watermark {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 380px;
+            color: rgba(255, 255, 255, .03);
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .importance-section h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .importance-section p {
+            color: rgba(255, 255, 255, .7);
+            max-width: 580px;
+            margin: 0 auto;
+            font-size: 1rem;
+            line-height: 1.75;
+            position: relative;
+        }
+
+        /* ── TIMELINE ─────────────────────────────────── */
+        .timeline-wrapper {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 52px;
+            left: calc(12.5% + 20px);
+            right: calc(12.5% + 20px);
+            height: 2px;
+            background: repeating-linear-gradient(90deg,
+                    var(--rose-md) 0px, var(--rose-md) 8px,
+                    transparent 8px, transparent 18px);
+            z-index: 0;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .timeline-node {
+            width: 52px;
+            height: 52px;
+            background: var(--rose);
+            color: #fff;
+            border-radius: 50%;
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            box-shadow: 0 4px 16px rgba(201, 48, 74, .35);
+            border: 3px solid var(--surface);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .timeline-step:hover .timeline-node {
+            transform: scale(1.12);
+            box-shadow: 0 6px 24px rgba(201, 48, 74, .5);
+        }
+
+        .timeline-step h5 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1rem;
+            margin-bottom: .4rem;
+        }
+
+        .timeline-step p {
+            font-size: .82rem;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 160px;
+            margin: 0 auto;
+        }
+
+        /* ── CTA ──────────────────────────────────────── */
+        .cta-section {
+            background: linear-gradient(135deg, #fde8ed 0%, var(--rose-lt) 100%);
+            padding: 5rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(201, 48, 74, .1) 0%, transparent 65%);
+        }
+
+        .cta-section h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin-bottom: .6rem;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .cta-section p {
+            color: var(--muted);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn-cta-outline {
+            background: transparent;
+            color: var(--dark);
+            border: 1.5px solid #c8aab2;
+            border-radius: 10px;
+            padding: .75rem 1.6rem;
+            font-size: .9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all .2s;
+            display: inline-block;
+        }
+
+        .btn-cta-outline:hover {
+            border-color: var(--rose);
+            color: var(--rose);
+            transform: translateY(-2px);
+        }
+
+        /* ── FOOTER ───────────────────────────────────── */
+        footer {
+            background: var(--dark);
+            color: rgba(255, 255, 255, .5);
+            text-align: center;
+            padding: 1.75rem;
+            font-size: .85rem;
+            border-top: 2px solid var(--rose);
+        }
+
+        /* ── SCROLL ANIMATIONS ────────────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .65s ease, transform .65s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger>* {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .5s ease, transform .5s ease;
+        }
+
+        .stagger.visible>*:nth-child(1) {
+            opacity: 1;
+            transform: none;
+            transition-delay: .05s;
+        }
+
+        .stagger.visible>*:nth-child(2) {
+            opacity: 1;
+            transform: none;
+            transition-delay: .15s;
+        }
+
+        .stagger.visible>*:nth-child(3) {
+            opacity: 1;
+            transform: none;
+            transition-delay: .25s;
+        }
+
+        .stagger.visible>*:nth-child(4) {
+            opacity: 1;
+            transform: none;
+            transition-delay: .35s;
+        }
+
+        /* ── RESPONSIVE ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hero-left {
+                clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%);
+                padding: 4rem 1.5rem 5rem;
+            }
+
+            .hero-right {
+                min-height: 260px;
+            }
+
+            .hero-ribbon-main {
+                font-size: 140px;
+            }
+
+            .timeline-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-ribbon me-2" style="color:var(--rose);"></i>
+            WomiCare<br>
+            <sub>A Breast Cancer Detector</sub>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/predict">Check Risk</a></li>
+                <li class="nav-item"><a class="nav-link" href="/symptoms">Symptoms</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/awareness">Awareness</a></li>
+                        <li><a class="dropdown-item" href="/measurements">Measurements</a></li>
+                        <li><a class="dropdown-item" href="/about">About</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+
+        <!-- LEFT: dark headline -->
+        <div class="hero-left">
+            <span class="hero-eyebrow">
+                <i class="fa-solid fa-ribbon"></i> Awareness &amp; Early Detection
+            </span>
+            <h1>Early Awareness<br><em>Saves Lives</em></h1>
+            <p>A breast cancer awareness and risk screening platform to help you take informed steps — privately,
+                responsibly, and with confidence.</p>
+            <div class="hero-buttons">
+                <a href="/predict" class="btn-primary-rose">Check Risk Now</a>
+                <a href="/symptoms" class="btn-ghost">Learn Symptoms</a>
+            </div>
+        </div>
+
+        <!-- RIGHT: rose ribbon panel -->
+        <div class="hero-right">
+
+            <!-- scattered small ribbons -->
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:52px; top:9%; left:9%; opacity:.18; transform:rotate(-15deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:34px; top:65%; left:15%; opacity:.14; transform:rotate(22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:44px; top:14%; right:8%; opacity:.16; transform:rotate(-22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:28px; bottom:14%; right:14%; opacity:.13; transform:rotate(12deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:38px; bottom:28%; left:6%; opacity:.1; transform:rotate(-8deg);"></i>
+
+            <!-- main hero ribbon -->
+            <i class="fa-solid fa-ribbon hero-ribbon-main"></i>
+        </div>
+    </section>
+
+    <!-- ── STATS BAR ── -->
+    <div class="stats-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="569">0</span>
+                    <span class="stat-label">Patients in Dataset</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="97" data-suffix="%">0%</span>
+                    <span class="stat-label">Model Accuracy</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="13">0</span>
+                    <span class="stat-label">Clinical Features</span>
+                </div>
+                <div class="col-6 col-md-3 stat-item py-2">
+                    <span class="stat-number" data-target="300">0</span>
+                    <span class="stat-label">Decision Trees</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ── PLATFORM FEATURES ── -->
+    <div class="container section-block">
+        <div class="text-center fade-up">
+            <h2 class="section-title">What This Platform Offers</h2>
+            <p class="section-subtitle">Combining machine learning with accessible health education to support informed
+                decision-making.</p>
+        </div>
+        <div class="row g-4 stagger">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="card-icon"><i class="fa-solid fa-ribbon" style="color:var(--rose);"></i></span>
+                    <h5>Awareness</h5>
+                    <p>Learn about breast cancer symptoms, risk factors, and prevention strategies in plain language.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="card-icon">🤖</span>
+                    <h5>Risk Screening</h5>
+                    <p>A Random Forest model trained on clinical FNA biopsy data evaluates risk patterns from your
+                        inputs.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="card-icon">🧭</span>
+                    <h5>Guidance</h5>
+                    <p>Understand when professional consultation is important and what your next steps could be.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="card-icon">🎯</span>
+                    <h5>Our Objective</h5>
+                    <p>Provide early risk indication using data-driven insights, encouraging timely medical
+                        consultation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── WHY IT MATTERS ── -->
+    <section class="importance-section">
+        <i class="fa-solid fa-ribbon importance-ribbon-watermark"></i>
+        <div class="container fade-up">
+            <h2>Why Early Detection Matters</h2>
+            <p style="margin-top:.8rem;">When breast cancer is detected early, survival rates improve dramatically.
+                Awareness, self-examination, and timely consultation can save lives — and this platform exists to make
+                that first step a little easier.</p>
+        </div>
+    </section>
+
+    <!-- ── HOW IT WORKS — TIMELINE ── -->
+    <div class="container section-block">
+        <div class="text-center fade-up">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Four simple steps from your clinical report to a risk assessment.</p>
+        </div>
+        <div class="timeline-wrapper">
+            <div class="timeline-line d-none d-md-block"></div>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="timeline-step fade-up" style="transition-delay:.05s">
+                        <div class="timeline-node">1</div>
+                        <h5>Enter Measurements</h5>
+                        <p>Provide values from medical imaging or clinical biopsy reports.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="timeline-step fade-up" style="transition-delay:.15s">
+                        <div class="timeline-node">2</div>
+                        <h5>Data Analysis</h5>
+                        <p>A trained ML model analyses input against real clinical patterns.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="timeline-step fade-up" style="transition-delay:.25s">
+                        <div class="timeline-node">3</div>
+                        <h5>Risk Assessment</h5>
+                        <p>The system estimates risk level with a clear confidence score.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="timeline-step fade-up" style="transition-delay:.35s">
+                        <div class="timeline-node">4</div>
+                        <h5>Next Steps</h5>
+                        <p>Guidance on whether medical consultation is advised — always with clear disclaimers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── WHO SHOULD USE ── -->
+    <div class="section-block" style="background:#fff; position:relative; overflow:hidden;">
+        <i class="fa-solid fa-ribbon ribbon-scatter"
+            style="font-size:90px; top:8%; right:3%; opacity:.05; transform:rotate(18deg);"></i>
+        <i class="fa-solid fa-ribbon ribbon-scatter"
+            style="font-size:60px; bottom:6%; left:2%; opacity:.06; transform:rotate(-14deg);"></i>
+
+        <div class="container">
+            <div class="text-center fade-up">
+                <h2 class="section-title">Who Should Use This Tool?</h2>
+                <p class="section-subtitle">Built for anyone seeking awareness, education, or a better understanding of
+                    their clinical data.</p>
+            </div>
+            <div class="row g-4 stagger">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <span class="card-icon">🧍</span>
+                        <h5>Individuals Seeking Awareness</h5>
+                        <p>People who want to learn privately and responsibly about breast cancer risk.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <span class="card-icon">📄</span>
+                        <h5>With Medical Reports</h5>
+                        <p>Users with clinical measurements seeking an additional data-driven perspective.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <span class="card-icon">🤍</span>
+                        <h5>Feeling Unsure</h5>
+                        <p>Those anxious but not yet ready for consultation — a gentle, private starting point.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <span class="card-icon">🎓</span>
+                        <h5>Students &amp; Learners</h5>
+                        <p>Educational understanding of how AI and ML is applied in real healthcare scenarios.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+        <div class="container fade-up">
+            <h2>Take the First Step</h2>
+            <p>Knowledge is the most powerful tool. Start here — it takes less than a minute.</p>
+            <div class="cta-buttons">
+                <a href="/predict" class="btn-primary-rose">Check Risk Now</a>
+                <a href="/symptoms" class="btn-cta-outline">Learn Symptoms</a>
+                <a href="/measurements" class="btn-cta-outline">How to Take Measurements</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="mb-1">Educational purpose only — not a medical diagnosis or treatment tool.</p>
+        <p class="mb-0">
+            <i class="fa-solid fa-ribbon me-1" style="color:var(--rose);"></i>
+            Built with care by Amritanshu Mukund
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ── STAT COUNTER ──────────────────────────────
+        function animateCounter(el) {
+            const target = parseInt(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const step = target / (1800 / 16);
+            let current = 0;
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(timer); }
+                el.textContent = Math.floor(current) + suffix;
+            }, 16);
+        }
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('[data-target]').forEach(animateCounter);
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        const statsBar = document.querySelector('.stats-bar');
+        if (statsBar) statsObserver.observe(statsBar);
+
+        // ── SCROLL FADE-IN ────────────────────────────
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.fade-up, .stagger').forEach(el => fadeObserver.observe(el));
+    </script>
+
+</body>
+
+</html>

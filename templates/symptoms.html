@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptoms — WomiCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose:    #c9304a;
+            --rose-lt: #f8e6ea;
+            --rose-md: #e8a0b0;
+            --dark:    #1a1118;
+            --muted:   #6b5c63;
+            --surface: #fff8f9;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--surface);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .navbar {
+            background: var(--dark) !important;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--rose);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: #fff !important;
+            letter-spacing: .02em;
+        }
+        .nav-link { color: rgba(255,255,255,.75) !important; font-weight: 500; transition: color .2s; }
+        .nav-link:hover, .nav-link.active { color: var(--rose-md) !important; }
+        .dropdown-menu { background: var(--dark); border: 1px solid #3a2830; }
+        .dropdown-item { color: rgba(255,255,255,.75); }
+        .dropdown-item:hover { background: var(--rose); color: #fff; }
+
+        /* ── PAGE HERO ────────────────────────────────── */
+        .page-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 320px;
+            overflow: hidden;
+        }
+        .hero-left {
+            background: linear-gradient(150deg, var(--dark) 0%, #2e0f1e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3.5rem 4rem 3.5rem 5%;
+            position: relative;
+            z-index: 2;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+        }
+        .hero-left::before {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(201,48,74,.2) 0%, transparent 70%);
+            bottom: -60px; right: -30px;
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(201,48,74,.18);
+            border: 1px solid rgba(201,48,74,.4);
+            color: var(--rose-md);
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+        .hero-left h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: .8rem;
+        }
+        .hero-left h1 em { color: var(--rose-md); font-style: italic; }
+        .hero-left p {
+            color: rgba(255,255,255,.65);
+            font-size: .92rem;
+            line-height: 1.7;
+            max-width: 400px;
+        }
+        .hero-right {
+            background: linear-gradient(135deg, #f9eef1 0%, #fde8ed 60%, #f5c6d0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(201,48,74,.1) 0%, transparent 65%);
+        }
+        .hero-ribbon-main {
+            font-size: 160px;
+            color: var(--rose);
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 12px 30px rgba(180,40,70,.28));
+            animation: floatRibbon 5s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes floatRibbon {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50%       { transform: translateY(-14px) rotate(3deg); }
+        }
+        .ribbon-scatter {
+            position: absolute;
+            color: var(--rose);
+            pointer-events: none;
+        }
+
+        /* ── DISCLAIMER ───────────────────────────────── */
+        .disclaimer-banner {
+            background: #fff3cd;
+            border-left: 4px solid #e0a800;
+            padding: .75rem 1.25rem;
+            font-size: .88rem;
+            color: #664d03;
+            text-align: center;
+        }
+
+        /* ── SECTION ──────────────────────────────────── */
+        .section-block { padding: 4.5rem 0; }
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.5rem, 2.8vw, 2rem);
+            color: var(--dark);
+            margin-bottom: .4rem;
+        }
+        .section-subtitle {
+            color: var(--muted);
+            font-size: .93rem;
+            line-height: 1.7;
+            max-width: 580px;
+        }
+
+        /* ── SYMPTOM CARDS ────────────────────────────── */
+        .symptom-card {
+            background: var(--card-bg);
+            border: 1.5px solid #f0dde2;
+            border-radius: 16px;
+            padding: 1.6rem;
+            height: 100%;
+            transition: transform .25s, box-shadow .25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .symptom-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--rose);
+            border-radius: 4px 0 0 4px;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+        .symptom-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(201,48,74,.12); }
+        .symptom-card:hover::before { opacity: 1; }
+        .symptom-card .card-icon {
+            width: 46px; height: 46px;
+            background: var(--rose-lt);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--rose);
+            margin-bottom: 1rem;
+            transition: background .25s;
+        }
+        .symptom-card:hover .card-icon { background: var(--rose); color: #fff; }
+        .symptom-card h5 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: .5rem;
+        }
+        .symptom-card p { font-size: .88rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+        /* ── CHECKLIST ITEMS ──────────────────────────── */
+        .check-list { list-style: none; padding: 0; margin: 0; }
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: .8rem;
+            padding: .75rem 0;
+            border-bottom: 1px solid #f0dde2;
+            font-size: .92rem;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        .check-list li:last-child { border-bottom: none; }
+        .check-list li i {
+            color: var(--rose);
+            font-size: .85rem;
+            margin-top: .3rem;
+            flex-shrink: 0;
+        }
+
+        /* ── ADVANCED SYMPTOMS ────────────────────────── */
+        .advanced-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #3a1525 100%);
+            color: #fff;
+            padding: 4.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .advanced-section .ribbon-watermark {
+            position: absolute;
+            right: -40px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 380px;
+            color: rgba(255,255,255,.03);
+            pointer-events: none;
+            line-height: 1;
+        }
+        .advanced-section .section-title { color: #fff; }
+        .advanced-section .section-subtitle { color: rgba(255,255,255,.65); }
+
+        .advanced-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 14px;
+            padding: 1.4rem;
+            height: 100%;
+            transition: background .25s;
+        }
+        .advanced-card:hover { background: rgba(255,255,255,.1); }
+        .advanced-card .adv-icon {
+            font-size: 1.4rem;
+            color: var(--rose-md);
+            margin-bottom: .7rem;
+        }
+        .advanced-card h6 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: .4rem;
+        }
+        .advanced-card p { font-size: .83rem; color: rgba(255,255,255,.62); line-height: 1.65; margin: 0; }
+
+        /* ── WHEN TO SEE DOCTOR ───────────────────────── */
+        .doctor-section {
+            background: var(--card-bg);
+            position: relative;
+            overflow: hidden;
+        }
+        .doctor-section .ribbon-bg-icon {
+            position: absolute;
+            left: -30px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 300px;
+            color: var(--rose);
+            opacity: .03;
+            pointer-events: none;
+            line-height: 1;
+        }
+        .urgency-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.1rem 1.3rem;
+            background: var(--surface);
+            border: 1.5px solid #f0dde2;
+            border-radius: 12px;
+            margin-bottom: .85rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .urgency-item:hover { border-color: var(--rose); box-shadow: 0 4px 16px rgba(201,48,74,.1); }
+        .urgency-item:last-child { margin-bottom: 0; }
+        .urgency-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--rose);
+            flex-shrink: 0;
+            margin-top: .45rem;
+        }
+        .urgency-item p { font-size: .9rem; color: var(--dark); line-height: 1.6; margin: 0; }
+
+        /* ── RISK FACTORS ─────────────────────────────── */
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--rose-lt);
+            border: 1px solid #f0b8c4;
+            color: var(--rose);
+            padding: .45rem 1rem;
+            border-radius: 999px;
+            font-size: .83rem;
+            font-weight: 500;
+            margin: .3rem;
+            transition: background .2s, color .2s;
+        }
+        .risk-badge:hover { background: var(--rose); color: #fff; }
+
+        /* ── CTA ──────────────────────────────────────── */
+        .cta-section {
+            background: linear-gradient(135deg, #fde8ed 0%, var(--rose-lt) 100%);
+            padding: 4.5rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(201,48,74,.1) 0%, transparent 65%);
+        }
+        .cta-section h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+            color: var(--dark);
+            margin-bottom: .6rem;
+            position: relative;
+        }
+        .cta-section p { color: var(--muted); margin-bottom: 2rem; position: relative; }
+        .btn-primary-rose {
+            background: var(--rose); color: #fff; border: none;
+            border-radius: 10px; padding: .85rem 2rem;
+            font-size: .95rem; font-weight: 600;
+            text-decoration: none; display: inline-block;
+            transition: background .2s, transform .15s, box-shadow .2s;
+            position: relative;
+        }
+        .btn-primary-rose:hover {
+            background: #a8243c; transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201,48,74,.4); color: #fff;
+        }
+
+        /* ── FOOTER ───────────────────────────────────── */
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,.5);
+            text-align: center;
+            padding: 1.75rem;
+            font-size: .85rem;
+            border-top: 2px solid var(--rose);
+        }
+
+        /* ── SCROLL ANIMATIONS ────────────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+        .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
+        .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
+        .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
+        .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s; }
+
+        /* ── RESPONSIVE ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-hero { grid-template-columns: 1fr; min-height: auto; }
+            .hero-left {
+                clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%);
+                padding: 3rem 1.5rem 4rem;
+            }
+            .hero-right { min-height: 200px; }
+            .hero-ribbon-main { font-size: 110px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-ribbon me-2" style="color:var(--rose);"></i>
+            WomiCare<br>
+            <sub>A Breast Cancer Detector</sub>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/predict">Check Risk</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/symptoms">Symptoms</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/awareness">Awareness</a></li>
+                        <li><a class="dropdown-item" href="/measurements">Measurements</a></li>
+                        <li><a class="dropdown-item" href="/about">About</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── PAGE HERO ── -->
+    <section class="page-hero">
+        <div class="hero-left">
+            <span class="hero-eyebrow">
+                <i class="fa-solid fa-ribbon"></i> Awareness Guide
+            </span>
+            <h1>Recognizing<br><em>Warning Signs</em></h1>
+            <p>Awareness of breast cancer symptoms can help you seek medical advice earlier. Most symptoms are not cancer — but any new change is worth checking.</p>
+        </div>
+        <div class="hero-right">
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:42px; top:10%; left:10%; opacity:.17; transform:rotate(-14deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:28px; bottom:18%; left:16%; opacity:.13; transform:rotate(22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:36px; top:12%; right:9%; opacity:.15; transform:rotate(-20deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:22px; bottom:15%; right:13%; opacity:.12; transform:rotate(10deg);"></i>
+            <i class="fa-solid fa-ribbon hero-ribbon-main"></i>
+        </div>
+    </section>
+    
+    <!-- ── COMMON WARNING SIGNS ── -->
+    <div class="container section-block">
+        <div class="fade-up mb-4">
+            <h2 class="section-title">Common Warning Signs</h2>
+            <p class="section-subtitle">These are the most frequently reported symptoms. Most lumps and changes are benign — but any unusual change lasting more than a few weeks should be evaluated.</p>
+        </div>
+        <div class="row g-4 stagger">
+
+            <div class="col-md-6 col-lg-3">
+                <div class="symptom-card">
+                    <div class="card-icon"><i class="fa-solid fa-circle-dot"></i></div>
+                    <h5>Lump in Breast or Underarm</h5>
+                    <p>A painless lump or thickening that feels different from surrounding tissue. Lumps that are hard, irregularly shaped, and painless are more likely to be concerning.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="symptom-card">
+                    <div class="card-icon"><i class="fa-solid fa-arrows-left-right-to-line"></i></div>
+                    <h5>Change in Size or Shape</h5>
+                    <p>Noticeable swelling, shrinkage, or asymmetry in one breast that is not related to the menstrual cycle or recent weight change.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="symptom-card">
+                    <div class="card-icon"><i class="fa-solid fa-hand-dots"></i></div>
+                    <h5>Skin Changes</h5>
+                    <p>Dimpling, redness, dryness, thickening, or skin resembling an orange peel (peau d'orange). Persistent redness covering the breast can indicate inflammatory breast cancer.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="symptom-card">
+                    <div class="card-icon"><i class="fa-solid fa-droplet"></i></div>
+                    <h5>Nipple Changes</h5>
+                    <p>Inversion of the nipple, pain, unusual discharge (especially if bloody or clear without squeezing), or eczema-like scaly irritation around the areola.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── OTHER POSSIBLE SYMPTOMS ── -->
+    <div class="section-block" style="background:#fff;">
+        <div class="container">
+            <div class="row g-5 align-items-start">
+
+                <div class="col-lg-6 fade-up">
+                    <h2 class="section-title">Other Possible Symptoms</h2>
+                    <p class="section-subtitle mb-4">Less obvious signs that can still warrant attention from a healthcare professional.</p>
+                    <ul class="check-list">
+                        <li><i class="fa-solid fa-chevron-right"></i> Persistent breast pain unrelated to injury or menstrual cycle</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Swelling in part of the breast, even without a distinct lump</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Unusual warmth or heaviness in one breast</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Swollen lymph nodes near the collarbone or underarm</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Flattening or indentation of the breast surface</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Veins on the breast becoming more visible</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> Unexplained discharge from the breast without squeezing</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-6 fade-up" style="transition-delay:.15s">
+                    <h2 class="section-title">Important to Remember</h2>
+                    <p class="section-subtitle mb-4">Context matters. Most breast changes are not cancer.</p>
+                    <ul class="check-list">
+                        <li><i class="fa-solid fa-circle-info" style="color:#4a90d9;"></i> Many changes are caused by non-cancerous conditions — infections, hormonal fluctuations, or benign lumps (fibroadenomas)</li>
+                        <li><i class="fa-solid fa-circle-info" style="color:#4a90d9;"></i> Most people with breast cancer have no symptoms at time of initial diagnosis — tumors are often found during routine screening</li>
+                        <li><i class="fa-solid fa-circle-info" style="color:#4a90d9;"></i> Breast cancer is more than 100 times more common in women than in men, but men can develop it too</li>
+                        <li><i class="fa-solid fa-circle-info" style="color:#4a90d9;"></i> Any new or persistent change lasting more than 2–3 weeks should be evaluated by a doctor regardless of pain level</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ── ADVANCED / METASTATIC SYMPTOMS ── -->
+    <section class="advanced-section">
+        <i class="fa-solid fa-ribbon ribbon-watermark"></i>
+        <div class="container">
+            <div class="fade-up mb-4">
+                <h2 class="section-title">Advanced Stage Symptoms</h2>
+                <p class="section-subtitle mt-1">When breast cancer spreads beyond the breast (metastasis), it most commonly affects the bones, liver, lungs, and brain — each causing distinct symptoms.</p>
+            </div>
+            <div class="row g-4 stagger">
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="advanced-card">
+                        <div class="adv-icon"><i class="fa-solid fa-bone"></i></div>
+                        <h6>Bone Metastasis</h6>
+                        <p>Progressive bone pain, swelling, and weakened bones that may lead to fractures. Often felt in the spine, hips, or chest.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="advanced-card">
+                        <div class="adv-icon"><i class="fa-solid fa-stethoscope"></i></div>
+                        <h6>Liver Metastasis</h6>
+                        <p>Abdominal pain or swelling, nausea, vomiting, and jaundice (yellowing of the skin or eyes).</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="advanced-card">
+                        <div class="adv-icon"><i class="fa-solid fa-lungs"></i></div>
+                        <h6>Lung Metastasis</h6>
+                        <p>Persistent chest pain, shortness of breath, and a chronic cough that doesn't resolve with usual treatments.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="advanced-card">
+                        <div class="adv-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h6>Brain Metastasis</h6>
+                        <p>Persistent headaches, seizures, nausea, and disruptions to speech, vision, memory, or everyday behavior.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── RISK FACTORS ── -->
+    <div class="container section-block">
+        <div class="fade-up mb-4">
+            <h2 class="section-title">Known Risk Factors</h2>
+            <p class="section-subtitle">Having one or more risk factors does not mean you will develop breast cancer — but awareness helps you have informed conversations with your doctor.</p>
+        </div>
+        <div class="fade-up" style="transition-delay:.1s;">
+            <span class="risk-badge"><i class="fa-solid fa-person-half-dress"></i> Older age</span>
+            <span class="risk-badge"><i class="fa-solid fa-dna"></i> Family history of breast cancer</span>
+            <span class="risk-badge"><i class="fa-solid fa-dna"></i> BRCA1 / BRCA2 gene mutations</span>
+            <span class="risk-badge"><i class="fa-solid fa-wine-glass"></i> Alcohol consumption</span>
+            <span class="risk-badge"><i class="fa-solid fa-weight-scale"></i> Obesity</span>
+            <span class="risk-badge"><i class="fa-solid fa-couch"></i> Lack of physical exercise</span>
+            <span class="risk-badge"><i class="fa-solid fa-pills"></i> Hormone replacement therapy</span>
+            <span class="risk-badge"><i class="fa-solid fa-radiation"></i> Exposure to ionizing radiation</span>
+            <span class="risk-badge"><i class="fa-solid fa-baby"></i> Having children late or not at all</span>
+            <span class="risk-badge"><i class="fa-solid fa-calendar"></i> Early onset of menstruation</span>
+            <span class="risk-badge"><i class="fa-solid fa-clock-rotate-left"></i> Prior history of breast cancer</span>
+        </div>
+        <p class="mt-3 fade-up" style="font-size:.83rem; color:var(--muted); transition-delay:.2s;">
+            About 5–10% of breast cancer cases result from an inherited genetic predisposition such as BRCA mutations.
+        </p>
+    </div>
+
+    <!-- ── WHEN TO SEE A DOCTOR ── -->
+    <div class="doctor-section section-block">
+        <i class="fa-solid fa-ribbon doctor-section-ribbon-bg" style="position:absolute; left:-30px; top:50%; transform:translateY(-50%); font-size:300px; color:var(--rose); opacity:.03; pointer-events:none; line-height:1;"></i>
+        <div class="container" style="position:relative;">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 fade-up">
+                    <h2 class="section-title">When Should You<br>Consult a Doctor?</h2>
+                    <p class="section-subtitle mt-2">You don't need to wait for severe symptoms. If anything feels off, a conversation with your doctor is always the right move.</p>
+                </div>
+                <div class="col-lg-7 fade-up" style="transition-delay:.15s;">
+                    <div class="urgency-item">
+                        <div class="urgency-dot"></div>
+                        <p>A lump or thickening that does not go away after 2–3 weeks, regardless of pain level</p>
+                    </div>
+                    <div class="urgency-item">
+                        <div class="urgency-dot"></div>
+                        <p>Any unexplained nipple discharge, especially if it is bloody or occurs without squeezing</p>
+                    </div>
+                    <div class="urgency-item">
+                        <div class="urgency-dot"></div>
+                        <p>Skin changes on the breast — redness, dimpling, or texture resembling orange peel — that persist</p>
+                    </div>
+                    <div class="urgency-item">
+                        <div class="urgency-dot"></div>
+                        <p>Symptoms that are worsening or spreading, even if they seem minor individually</p>
+                    </div>
+                    <div class="urgency-item">
+                        <div class="urgency-dot"></div>
+                        <p>You feel anxious or uncertain about any change — peace of mind from a professional is always worthwhile</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+        <div class="container fade-up">
+            <h2>Have Clinical Measurements?</h2>
+            <p>If you already have FNA biopsy data from a medical report, use our ML screening tool for an additional data-driven perspective.</p>
+            <a href="/predict" class="btn-primary-rose">
+                <i class="fa-solid fa-microscope me-2"></i>Check Risk Now
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="mb-1">Educational purpose only — not a medical diagnosis or treatment tool.</p>
+        <p class="mb-0">
+            <i class="fa-solid fa-ribbon me-1" style="color:var(--rose);"></i>
+            Built with care by Amritanshu Mukund
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up, .stagger').forEach(el => fadeObserver.observe(el));
+    </script>
+
+</body>
+</html>

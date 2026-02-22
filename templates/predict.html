@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Screening — WomiCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose: #c9304a;
+            --rose-lt: #f8e6ea;
+            --rose-md: #e8a0b0;
+            --dark: #1a1118;
+            --muted: #6b5c63;
+            --surface: #fff8f9;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--surface);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .navbar {
+            background: var(--dark) !important;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--rose);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: #fff !important;
+            letter-spacing: .02em;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, .75) !important;
+            font-weight: 500;
+            transition: color .2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--rose-md) !important;
+        }
+
+        .dropdown-menu {
+            background: var(--dark);
+            border: 1px solid #3a2830;
+        }
+
+        .dropdown-item {
+            color: rgba(255, 255, 255, .75);
+        }
+
+        .dropdown-item:hover {
+            background: var(--rose);
+            color: #fff;
+        }
+
+        /* ── HERO — DIAGONAL SPLIT ────────────────────── */
+        .page-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 340px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-left {
+            background: linear-gradient(150deg, var(--dark) 0%, #2e0f1e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3.5rem 4rem 3.5rem 5%;
+            position: relative;
+            z-index: 2;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+        }
+
+        .hero-left::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 48, 74, .2) 0%, transparent 70%);
+            bottom: -60px;
+            right: -30px;
+            pointer-events: none;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: rgba(201, 48, 74, .18);
+            border: 1px solid rgba(201, 48, 74, .4);
+            color: var(--rose-md);
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        .hero-left h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: .8rem;
+        }
+
+        .hero-left h1 em {
+            color: var(--rose-md);
+            font-style: italic;
+        }
+
+        .hero-left p {
+            color: rgba(255, 255, 255, .65);
+            font-size: .92rem;
+            line-height: 1.7;
+            max-width: 400px;
+            margin: 0;
+        }
+
+        .hero-right {
+            background: linear-gradient(135deg, #f9eef1 0%, #fde8ed 60%, #f5c6d0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(201, 48, 74, .1) 0%, transparent 65%);
+        }
+
+        .hero-ribbon-main {
+            font-size: 160px;
+            color: var(--rose);
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 12px 30px rgba(180, 40, 70, .28));
+            animation: floatRibbon 5s ease-in-out infinite;
+            line-height: 1;
+        }
+
+        @keyframes floatRibbon {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-3deg);
+            }
+
+            50% {
+                transform: translateY(-14px) rotate(3deg);
+            }
+        }
+
+        .ribbon-scatter {
+            position: absolute;
+            color: var(--rose);
+            pointer-events: none;
+        }
+
+        /* ── DISCLAIMER ───────────────────────────────── */
+        .disclaimer-banner {
+            background: #fff3cd;
+            border-left: 4px solid #e0a800;
+            padding: .75rem 1.25rem;
+            font-size: .88rem;
+            color: #664d03;
+            text-align: center;
+        }
+
+        /* ── RESULT CARD ──────────────────────────────── */
+        .result-section {
+            animation: slideDown .55s cubic-bezier(.22, .68, 0, 1.2);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, .12);
+            border: none;
+        }
+
+        .result-card.malignant {
+            border-top: 5px solid var(--rose);
+        }
+
+        .result-card.benign {
+            border-top: 5px solid #198754;
+        }
+
+        .result-header {
+            padding: 2rem 2rem 1.5rem;
+        }
+
+        .result-header.malignant-bg {
+            background: linear-gradient(135deg, #fdecea 0%, #fff8f9 100%);
+        }
+
+        .result-header.benign-bg {
+            background: linear-gradient(135deg, #e9f7ef 0%, #f8fffe 100%);
+        }
+
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem 1.1rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .92rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .badge-malignant {
+            background: var(--rose);
+            color: #fff;
+        }
+
+        .badge-benign {
+            background: #198754;
+            color: #fff;
+        }
+
+        .confidence-label {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: .4rem;
+        }
+
+        .confidence-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 999px;
+            background: #e9ecef;
+            flex: 1;
+        }
+
+        .progress-bar {
+            border-radius: 999px;
+            transition: width 1.2s ease;
+        }
+
+        .confidence-pct {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            min-width: 3.5rem;
+            text-align: right;
+        }
+
+        .confidence-pct.danger {
+            color: var(--rose);
+        }
+
+        .confidence-pct.success {
+            color: #198754;
+        }
+
+        .result-footer {
+            background: #fff8e1;
+            border-top: 1px solid #ffe082;
+            padding: 1rem 2rem;
+            font-size: .82rem;
+            color: #7a5c00;
+            display: flex;
+            align-items: flex-start;
+            gap: .6rem;
+        }
+
+        /* ── FORM WRAPPER ─────────────────────────────── */
+        .form-wrapper {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, .07);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rose), var(--rose-md));
+        }
+
+        /* ribbon watermark inside form */
+        .form-ribbon-watermark {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 280px;
+            color: var(--rose);
+            opacity: .03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .form-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.7rem;
+            margin-bottom: .3rem;
+        }
+
+        .form-subtitle {
+            color: var(--muted);
+            font-size: .88rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .measurements-tip {
+            background: var(--rose-lt);
+            border: 1px solid #f0b8c4;
+            border-radius: 10px;
+            padding: .75rem 1rem;
+            font-size: .84rem;
+            color: #7a2035;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .measurements-tip a {
+            color: var(--rose);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .measurements-tip a:hover {
+            text-decoration: underline;
+        }
+
+        /* fieldsets */
+        .fieldset-block {
+            border: 1.5px solid #f0dde2;
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.6rem;
+            background: var(--surface);
+            position: relative;
+        }
+
+        .fieldset-block legend {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: var(--rose);
+            padding: 0 .6rem;
+            width: auto;
+            float: none;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        /* inputs */
+        .form-label {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: .2rem;
+            display: block;
+        }
+
+        .form-label small {
+            display: block;
+            font-size: .75rem;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            color: #bbb;
+            margin-top: .1rem;
+        }
+
+        .form-control {
+            border: 1.5px solid #e8dde0;
+            border-radius: 8px;
+            font-size: .9rem;
+            padding: .55rem .85rem;
+            background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--rose);
+            box-shadow: 0 0 0 3px rgba(201, 48, 74, .12);
+            outline: none;
+        }
+
+        /* submit button */
+        .btn-analyze {
+            background: var(--rose);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background .2s, transform .15s, box-shadow .2s;
+            letter-spacing: .03em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            margin-top: .5rem;
+        }
+
+        .btn-analyze:hover {
+            background: #a8243c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(201, 48, 74, .38);
+        }
+
+        .btn-analyze:active {
+            transform: translateY(0);
+        }
+
+        /* ── SCROLL ANIMATIONS ────────────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── FOOTER ───────────────────────────────────── */
+        footer {
+            background: var(--dark);
+            color: rgba(255, 255, 255, .5);
+            text-align: center;
+            padding: 1.75rem;
+            font-size: .85rem;
+            border-top: 2px solid var(--rose);
+            margin-top: 5rem;
+        }
+
+        /* ── RESPONSIVE ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hero-left {
+                clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%);
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            .hero-right {
+                min-height: 200px;
+            }
+
+            .hero-ribbon-main {
+                font-size: 110px;
+            }
+
+            .form-wrapper {
+                padding: 1.5rem;
+            }
+
+            .result-header {
+                padding: 1.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-ribbon me-2" style="color:var(--rose);"></i>
+            WomiCare<br>
+            <sub>A Breast Cancer Detector</sub>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/predict">Check Risk</a></li>
+                <li class="nav-item"><a class="nav-link" href="/symptoms">Symptoms</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/awareness">Awareness</a></li>
+                        <li><a class="dropdown-item" href="/measurements">Measurements</a></li>
+                        <li><a class="dropdown-item" href="/about">About</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── PAGE HERO ── -->
+    <section class="page-hero">
+
+        <!-- LEFT -->
+        <div class="hero-left">
+            <h1>Breast Cancer<br><em>Risk Screening</em></h1>
+            <p>Enter values from your clinical FNA biopsy report. Our trained model will analyse the pattern and
+                estimate your risk level with a confidence score.</p>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="hero-right">
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:42px; top:10%; left:10%; opacity:.17; transform:rotate(-14deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:28px; bottom:18%; left:16%; opacity:.13; transform:rotate(22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:36px; top:12%; right:9%; opacity:.15; transform:rotate(-20deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter"
+                style="font-size:22px; bottom:15%; right:13%; opacity:.12; transform:rotate(10deg);"></i>
+            <i class="fa-solid fa-ribbon hero-ribbon-main"></i>
+        </div>
+    </section>
+
+    <!-- ── DISCLAIMER ── -->
+    <div class="disclaimer-banner">
+        ⚠️ Enter values <strong>only from verified medical reports.</strong> This tool is for awareness only — not a
+        substitute for professional diagnosis.
+    </div>
+
+    <div class="container my-5">
+
+        <!-- ── RESULT (shown after POST) ── -->
+        {% if prediction %}
+        <div id="result-section" class="result-section mb-5 fade-up visible">
+            <div class="result-card {% if alert_class == 'alert-danger' %}malignant{% else %}benign{% endif %}">
+
+                <div
+                    class="result-header {% if alert_class == 'alert-danger' %}malignant-bg{% else %}benign-bg{% endif %}">
+
+                    <div
+                        class="result-badge {% if alert_class == 'alert-danger' %}badge-malignant{% else %}badge-benign{% endif %}">
+                        <i
+                            class="fa-solid {% if alert_class == 'alert-danger' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                        {{ prediction }}
+                    </div>
+
+                    <div class="confidence-label">Model Confidence</div>
+                    <div class="confidence-row">
+                        <div class="progress">
+                            <div class="progress-bar {% if alert_class == 'alert-danger' %}bg-danger{% else %}bg-success{% endif %}"
+                                role="progressbar" style="width: {{ confidence }}%" aria-valuenow="{{ confidence }}"
+                                aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <span
+                            class="confidence-pct {% if alert_class == 'alert-danger' %}danger{% else %}success{% endif %}">
+                            {{ confidence }}%
+                        </span>
+                    </div>
+                    <small class="text-muted d-block mt-2" style="font-size:.78rem;">
+                        Higher confidence reflects a stronger pattern match in the model.
+                    </small>
+
+                    {% if message %}
+                    <p class="mt-3 mb-0" style="font-size:.88rem; color:var(--muted);">{{ message }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="result-footer">
+                    <i class="fa-solid fa-stethoscope mt-1" style="color:#c9a227; flex-shrink:0;"></i>
+                    <span><strong>Important:</strong> This result is <em>not</em> a medical diagnosis.
+                        Please consult a qualified healthcare professional regardless of the outcome shown above.</span>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ── FORM ── -->
+        <div class="form-wrapper fade-up">
+
+            <!-- watermark ribbon -->
+            <i class="fa-solid fa-ribbon form-ribbon-watermark"></i>
+
+            <div class="form-inner">
+                <h2 class="form-title">Enter Measurement Values</h2>
+                <p class="form-subtitle">All 13 fields are required. Values come from fine needle aspiration (FNA)
+                    biopsy imaging analysis.</p>
+
+                <div class="measurements-tip">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Not sure where these numbers come from?
+                    <a href="/measurements">Read our measurements guide →</a>
+                </div>
+
+                <form method="POST" action="/predict">
+
+                    <!-- MEAN -->
+                    <fieldset class="fieldset-block">
+                        <legend>
+                            <i class="fa-solid fa-chart-line" style="font-size:.9rem;"></i>
+                            Mean Measurements
+                        </legend>
+                        <div class="row g-3 mt-1">
+
+                            <div class="col-md-4">
+                                <label class="form-label">Radius Mean
+                                    <small>Range: 6.9 – 28.11</small>
+                                </label>
+                                <input class="form-control" type="number" name="radius_mean" min="6.9" max="28.11"
+                                    step="any" placeholder="e.g. 14.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Texture Mean
+                                    <small>Range: 9.71 – 39.28</small>
+                                </label>
+                                <input class="form-control" type="number" name="texture_mean" min="9.71" max="39.28"
+                                    step="any" placeholder="e.g. 19.5" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Perimeter Mean
+                                    <small>Range: 43.79 – 188.5</small>
+                                </label>
+                                <input class="form-control" type="number" name="perimeter_mean" min="43.79" max="188.5"
+                                    step="any" placeholder="e.g. 92.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Area Mean
+                                    <small>Range: 143.5 – 2501</small>
+                                </label>
+                                <input class="form-control" type="number" name="area_mean" min="143.5" max="2501"
+                                    step="any" placeholder="e.g. 655.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Compactness Mean
+                                    <small>Range: 0.019 – 0.34</small>
+                                </label>
+                                <input class="form-control" type="number" name="compactness_mean" min="0.019" max="0.34"
+                                    step="any" placeholder="e.g. 0.10" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Concavity Mean
+                                    <small>Range: 0.0 – 0.42</small>
+                                </label>
+                                <input class="form-control" type="number" name="concavity_mean" min="0.0" max="0.42"
+                                    step="any" placeholder="e.g. 0.09" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Concave Points Mean
+                                    <small>Range: 0.0 – 0.2012</small>
+                                </label>
+                                <input class="form-control" type="number" name="concave points_mean" min="0.0"
+                                    max="0.2012" step="any" placeholder="e.g. 0.05" required>
+                            </div>
+
+                        </div>
+                    </fieldset>
+
+                    <!-- WORST -->
+                    <fieldset class="fieldset-block">
+                        <legend>
+                            <i class="fa-solid fa-arrow-trend-up" style="font-size:.9rem;"></i>
+                            Worst Measurements
+                        </legend>
+                        <div class="row g-3 mt-1">
+
+                            <div class="col-md-4">
+                                <label class="form-label">Radius Worst
+                                    <small>Range: 7.93 – 36.04</small>
+                                </label>
+                                <input class="form-control" type="number" name="radius_worst" min="7.93" max="36.04"
+                                    step="any" placeholder="e.g. 17.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Texture Worst
+                                    <small>Range: 12.02 – 49.54</small>
+                                </label>
+                                <input class="form-control" type="number" name="texture_worst" min="12.02" max="49.54"
+                                    step="any" placeholder="e.g. 25.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Perimeter Worst
+                                    <small>Range: 50.41 – 251.2</small>
+                                </label>
+                                <input class="form-control" type="number" name="perimeter_worst" min="50.41" max="251.2"
+                                    step="any" placeholder="e.g. 115.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Area Worst
+                                    <small>Range: 185.2 – 4254</small>
+                                </label>
+                                <input class="form-control" type="number" name="area_worst" min="185.2" max="4254"
+                                    step="any" placeholder="e.g. 900.0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Concavity Worst
+                                    <small>Range: 0.0 – 1.252</small>
+                                </label>
+                                <input class="form-control" type="number" name="concavity_worst" min="0.0" max="1.252"
+                                    step="any" placeholder="e.g. 0.25" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Concave Points Worst
+                                    <small>Range: 0.0 – 0.291</small>
+                                </label>
+                                <input class="form-control" type="number" name="concave points_worst" min="0.0"
+                                    max="0.291" step="any" placeholder="e.g. 0.12" required>
+                            </div>
+
+                        </div>
+                    </fieldset>
+
+                    <button class="btn-analyze" type="submit">
+                        <i class="fa-solid fa-microscope"></i>
+                        Analyse Risk
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="mb-1">Educational purpose only — not a medical diagnosis or treatment tool.</p>
+        <p class="mb-0">
+            <i class="fa-solid fa-ribbon me-1" style="color:var(--rose);"></i>
+            Built with care by Amritanshu Mukund
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // scroll fade-in
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+        // auto scroll to result after submit
+        window.addEventListener('load', () => {
+            const result = document.getElementById('result-section');
+            if (result) result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    </script>
+
+</body>
+
+</html>

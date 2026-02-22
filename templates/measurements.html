@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measurements Guide — WomiCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rose:    #c9304a;
+            --rose-lt: #f8e6ea;
+            --rose-md: #e8a0b0;
+            --dark:    #1a1118;
+            --muted:   #6b5c63;
+            --surface: #fff8f9;
+            --card-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--dark); overflow-x: hidden; }
+
+        /* ── NAVBAR ───────────────────────────────────── */
+        .navbar { background: var(--dark) !important; padding: 1rem 2rem; border-bottom: 2px solid var(--rose); position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #fff !important; letter-spacing: .02em; }
+        .nav-link { color: rgba(255,255,255,.75) !important; font-weight: 500; transition: color .2s; }
+        .nav-link:hover, .nav-link.active { color: var(--rose-md) !important; }
+        .dropdown-menu { background: var(--dark); border: 1px solid #3a2830; }
+        .dropdown-item { color: rgba(255,255,255,.75); }
+        .dropdown-item:hover { background: var(--rose); color: #fff; }
+
+        /* ── HERO ─────────────────────────────────────── */
+        .page-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 320px; overflow: hidden; }
+        .hero-left {
+            background: linear-gradient(150deg, var(--dark) 0%, #2e0f1e 100%);
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 3.5rem 4rem 3.5rem 5%;
+            position: relative; z-index: 2;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
+        }
+        .hero-left::before {
+            content: ''; position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(201,48,74,.2) 0%, transparent 70%);
+            bottom: -60px; right: -30px; pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: rgba(201,48,74,.18); border: 1px solid rgba(201,48,74,.4);
+            color: var(--rose-md); padding: .3rem .85rem; border-radius: 999px;
+            font-size: .78rem; font-weight: 600; letter-spacing: .06em;
+            text-transform: uppercase; margin-bottom: 1rem; width: fit-content;
+        }
+        .hero-left h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: #fff; line-height: 1.2; margin-bottom: .8rem; }
+        .hero-left h1 em { color: var(--rose-md); font-style: italic; }
+        .hero-left p { color: rgba(255,255,255,.65); font-size: .92rem; line-height: 1.7; max-width: 400px; }
+        .hero-right {
+            background: linear-gradient(135deg, #f9eef1 0%, #fde8ed 60%, #f5c6d0 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .hero-right::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, rgba(201,48,74,.1) 0%, transparent 65%); }
+        .hero-ribbon-main { font-size: 160px; color: var(--rose); position: relative; z-index: 1; filter: drop-shadow(0 12px 30px rgba(180,40,70,.28)); animation: floatRibbon 5s ease-in-out infinite; line-height: 1; }
+        @keyframes floatRibbon { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-14px) rotate(3deg); } }
+        .ribbon-scatter { position: absolute; color: var(--rose); pointer-events: none; }
+
+        /* ── DISCLAIMER ───────────────────────────────── */
+        .disclaimer-banner { background: #fff3cd; border-left: 4px solid #e0a800; padding: .75rem 1.25rem; font-size: .88rem; color: #664d03; text-align: center; }
+
+        /* ── SHARED ───────────────────────────────────── */
+        .section-block { padding: 4.5rem 0; }
+        .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 2.8vw, 2.1rem); color: var(--dark); margin-bottom: .4rem; }
+        .section-subtitle { color: var(--muted); font-size: .93rem; line-height: 1.7; max-width: 620px; }
+
+        /* ── FNA OVERVIEW ─────────────────────────────── */
+        .fna-card {
+            background: var(--card-bg); border: 1.5px solid #f0dde2;
+            border-radius: 20px; padding: 2.5rem;
+            position: relative; overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,.06);
+        }
+        .fna-card::before { content: ''; position: absolute; top:0; left:0; width:100%; height:4px; background: linear-gradient(90deg, var(--rose), var(--rose-md)); }
+        .fna-card p { font-size: .93rem; line-height: 1.8; color: var(--dark); }
+        .fna-card p + p { margin-top: .9rem; }
+
+        .procedure-step {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1rem 1.2rem;
+            background: var(--surface); border: 1.5px solid #f0dde2;
+            border-radius: 12px; margin-bottom: .75rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .procedure-step:hover { border-color: var(--rose); box-shadow: 0 4px 16px rgba(201,48,74,.1); }
+        .procedure-step:last-child { margin-bottom: 0; }
+        .proc-num {
+            width: 34px; height: 34px; background: var(--rose); color: #fff;
+            border-radius: 50%; font-family: 'DM Serif Display', serif;
+            font-size: .95rem; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .procedure-step p { font-size: .88rem; color: var(--dark); line-height: 1.65; margin: 0; }
+        .procedure-step strong { display: block; margin-bottom: .15rem; }
+
+        /* ── GROUP HEADERS ────────────────────────────── */
+        .group-header {
+            background: linear-gradient(135deg, var(--dark) 0%, #3a1525 100%);
+            color: #fff; border-radius: 16px;
+            padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 1rem;
+            position: relative; overflow: hidden;
+        }
+        .group-header::before {
+            content: ''; position: absolute;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(201,48,74,.2) 0%, transparent 70%);
+            right: -40px; top: -60px; pointer-events: none;
+        }
+        .group-header-icon { font-size: 2rem; color: var(--rose-md); flex-shrink: 0; }
+        .group-header h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: .2rem; }
+        .group-header p { font-size: .85rem; color: rgba(255,255,255,.65); margin: 0; }
+
+        /* ── MEASUREMENT CARDS ────────────────────────── */
+        .measure-card {
+            background: var(--card-bg); border: 1.5px solid #f0dde2;
+            border-radius: 16px; overflow: hidden; margin-bottom: 1.25rem;
+            transition: box-shadow .25s;
+        }
+        .measure-card:hover { box-shadow: 0 8px 28px rgba(201,48,74,.1); }
+
+        .measure-card-header {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            background: var(--rose-lt);
+            border-bottom: 1.5px solid #f0dde2;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .measure-card-header:hover { background: #f5d0d8; }
+
+        .measure-icon {
+            width: 42px; height: 42px; background: var(--rose); color: #fff;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .measure-card-header h5 {
+            font-family: 'DM Serif Display', serif; font-size: 1.05rem;
+            margin-bottom: .1rem; color: var(--dark); flex: 1;
+        }
+        .measure-card-header .feature-code {
+            font-size: .72rem; font-family: 'Courier New', monospace;
+            color: var(--rose); background: rgba(201,48,74,.1);
+            padding: .2rem .6rem; border-radius: 4px; font-weight: 600;
+        }
+        .measure-card-header .chevron { color: var(--muted); transition: transform .3s; }
+        .measure-card-header.open .chevron { transform: rotate(180deg); }
+
+        .measure-card-body { padding: 1.5rem; display: none; }
+        .measure-card-body.open { display: block; animation: fadeIn .3s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+        .measure-card-body p { font-size: .9rem; color: var(--dark); line-height: 1.75; margin-bottom: .9rem; }
+
+        .range-badge {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: var(--rose-lt); border: 1px solid #f0b8c4;
+            color: var(--rose); padding: .35rem .9rem; border-radius: 999px;
+            font-size: .8rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        .measure-info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: .75rem; margin-top: .5rem;
+        }
+        .measure-info-item {
+            background: var(--surface); border: 1px solid #f0dde2;
+            border-radius: 10px; padding: .85rem 1rem;
+        }
+        .measure-info-item .info-label {
+            font-size: .72rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3rem;
+        }
+        .measure-info-item .info-value { font-size: .88rem; color: var(--dark); line-height: 1.5; }
+
+        .what-it-means {
+            background: linear-gradient(90deg, rgba(201,48,74,.06), rgba(201,48,74,.01));
+            border-left: 3px solid var(--rose);
+            border-radius: 0 10px 10px 0;
+            padding: .85rem 1rem;
+            margin-top: 1rem;
+            font-size: .87rem; color: var(--dark); line-height: 1.65;
+        }
+        .what-it-means strong { color: var(--rose); }
+
+        /* ── QUICK REF TABLE ──────────────────────────── */
+        .quick-ref-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #3a1525 100%);
+            padding: 4.5rem 0; position: relative; overflow: hidden;
+        }
+        .quick-ref-section .ribbon-watermark {
+            position: absolute; right: -40px; top: 50%;
+            transform: translateY(-50%); font-size: 380px;
+            color: rgba(255,255,255,.03); pointer-events: none; line-height: 1;
+        }
+        .quick-ref-section .section-title { color: #fff; }
+        .quick-ref-section .section-subtitle { color: rgba(255,255,255,.65); }
+
+        .ref-table { width: 100%; border-collapse: collapse; }
+        .ref-table th {
+            background: rgba(255,255,255,.08); color: var(--rose-md);
+            font-size: .78rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: .06em; padding: .9rem 1.1rem; text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+        .ref-table td {
+            padding: .85rem 1.1rem; font-size: .87rem; color: rgba(255,255,255,.8);
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+        .ref-table tr:last-child td { border-bottom: none; }
+        .ref-table tr:hover td { background: rgba(255,255,255,.04); }
+        .ref-table .code-cell {
+            font-family: 'Courier New', monospace; color: var(--rose-md);
+            font-size: .82rem;
+        }
+        .ref-table .range-cell { color: rgba(255,255,255,.6); font-size: .82rem; }
+
+        /* ── TIP BOX ──────────────────────────────────── */
+        .tip-box {
+            background: var(--rose-lt); border: 1px solid #f0b8c4;
+            border-radius: 14px; padding: 1.3rem 1.5rem;
+            display: flex; align-items: flex-start; gap: 1rem;
+            margin-top: 2rem;
+        }
+        .tip-box i { color: var(--rose); font-size: 1.2rem; flex-shrink: 0; margin-top: .15rem; }
+        .tip-box p { font-size: .88rem; color: #7a2035; line-height: 1.65; margin: 0; }
+
+        /* ── CTA ──────────────────────────────────────── */
+        .cta-section {
+            background: linear-gradient(135deg, #fde8ed 0%, var(--rose-lt) 100%);
+            padding: 4.5rem 1rem; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(201,48,74,.1) 0%, transparent 65%); }
+        .cta-section h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.3rem); color: var(--dark); margin-bottom: .6rem; position: relative; }
+        .cta-section p { color: var(--muted); margin-bottom: 2rem; position: relative; }
+        .cta-buttons { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; position: relative; }
+        .btn-primary-rose { background: var(--rose); color: #fff; border: none; border-radius: 10px; padding: .85rem 2rem; font-size: .95rem; font-weight: 600; text-decoration: none; display: inline-block; transition: background .2s, transform .15s, box-shadow .2s; }
+        .btn-primary-rose:hover { background: #a8243c; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,48,74,.4); color: #fff; }
+        .btn-outline-rose { background: transparent; color: var(--dark); border: 1.5px solid #c8aab2; border-radius: 10px; padding: .85rem 2rem; font-size: .95rem; font-weight: 500; text-decoration: none; display: inline-block; transition: all .2s; }
+        .btn-outline-rose:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+
+        /* ── FOOTER ───────────────────────────────────── */
+        footer { background: var(--dark); color: rgba(255,255,255,.5); text-align: center; padding: 1.75rem; font-size: .85rem; border-top: 2px solid var(--rose); }
+
+        /* ── SCROLL ANIMATIONS ────────────────────────── */
+        .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── RESPONSIVE ───────────────────────────────── */
+        @media (max-width: 768px) {
+            .page-hero { grid-template-columns: 1fr; min-height: auto; }
+            .hero-left { clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%); padding: 3rem 1.5rem 4rem; }
+            .hero-right { min-height: 200px; }
+            .hero-ribbon-main { font-size: 110px; }
+            .measure-info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/">
+            <i class="fa-solid fa-ribbon me-2" style="color:var(--rose);"></i>WomiCare<br>
+            <sub>A Breast Cancer Detector</sub>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/predict">Check Risk</a></li>
+                <li class="nav-item"><a class="nav-link" href="/symptoms">Symptoms</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/awareness">Awareness</a></li>
+                        <li><a class="dropdown-item" href="/measurements">Measurements</a></li>
+                        <li><a class="dropdown-item" href="/about">About</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="page-hero">
+        <div class="hero-left">
+            <span class="hero-eyebrow"><i class="fa-solid fa-ribbon"></i> Clinical Reference</span>
+            <h1>Understanding<br><em>Your Measurements</em></h1>
+            <p>A detailed guide to all 13 clinical features used by our model — what they measure, where they come from, and what their values mean.</p>
+        </div>
+        <div class="hero-right">
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:42px; top:10%; left:10%; opacity:.17; transform:rotate(-14deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:28px; bottom:18%; left:16%; opacity:.13; transform:rotate(22deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:36px; top:12%; right:9%; opacity:.15; transform:rotate(-20deg);"></i>
+            <i class="fa-solid fa-ribbon ribbon-scatter" style="font-size:22px; bottom:15%; right:13%; opacity:.12; transform:rotate(10deg);"></i>
+            <i class="fa-solid fa-ribbon hero-ribbon-main"></i>
+        </div>
+    </section>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer-banner">
+        ⚠️ These values must come from a <strong>verified medical or clinical FNA biopsy report</strong>. Do not estimate or guess these numbers.
+    </div>
+
+    <!-- ── WHAT IS FNA ── -->
+    <div class="container section-block">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-4 fade-up">
+                <h2 class="section-title">Where Do These Numbers Come From?</h2>
+                <p class="section-subtitle mt-2">All 13 measurements originate from a procedure called a Fine Needle Aspiration (FNA) biopsy, followed by digital image analysis of the cell nuclei extracted.</p>
+                <div class="tip-box mt-4">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>You cannot measure these values at home. They are computed by pathology software from microscopic biopsy images and will appear in your clinical laboratory report.</p>
+                </div>
+            </div>
+            <div class="col-lg-8 fade-up" style="transition-delay:.12s;">
+                <div class="fna-card">
+                    <p><strong>Fine Needle Aspiration (FNA)</strong> is a minimally invasive biopsy procedure where a thin, hollow needle is inserted into a breast lump or suspicious tissue to extract a small sample of cells. The procedure takes only a few minutes and is usually done under local anaesthetic.</p>
+                    <p>The extracted cells are placed on a glass slide and stained so that the nuclei (the control centres of the cells) become visible under a microscope. A pathologist then digitally images the sample at high magnification.</p>
+                    <p>Specialised image analysis software — such as the <strong>Xcyt system</strong> used in the Wisconsin Breast Cancer Dataset that trained this model — then computes geometric and texture measurements of each cell nucleus. For each measurement, three values are recorded: the <strong>mean</strong> (average across all nuclei), the <strong>standard error (SE)</strong>, and the <strong>worst</strong> (largest or most extreme value observed).</p>
+                    <p>These computed values are what you enter into our screening tool.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FNA Procedure Steps -->
+        <div class="mt-5 fade-up">
+            <h3 class="section-title mb-3">The FNA Procedure — Step by Step</h3>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="procedure-step">
+                        <div class="proc-num">1</div>
+                        <p><strong>Preparation</strong> The area is cleaned and a local anaesthetic may be applied to minimise discomfort. The patient lies down or sits with the breast accessible.</p>
+                    </div>
+                    <div class="procedure-step">
+                        <div class="proc-num">2</div>
+                        <p><strong>Needle Insertion</strong> A thin needle (22–25 gauge) attached to a syringe is inserted into the lump. Ultrasound guidance is often used to ensure accuracy.</p>
+                    </div>
+                    <div class="procedure-step">
+                        <div class="proc-num">3</div>
+                        <p><strong>Cell Aspiration</strong> Gentle suction is applied as the needle is moved back and forth within the lump to collect a sample of cells and fluid.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="procedure-step">
+                        <div class="proc-num">4</div>
+                        <p><strong>Slide Preparation</strong> The aspirated material is spread on glass slides, fixed, and stained with special dyes to make cell nuclei visible under the microscope.</p>
+                    </div>
+                    <div class="procedure-step">
+                        <div class="proc-num">5</div>
+                        <p><strong>Digital Imaging</strong> A pathologist images the prepared slides at high magnification. The boundaries of each cell nucleus are traced digitally.</p>
+                    </div>
+                    <div class="procedure-step">
+                        <div class="proc-num">6</div>
+                        <p><strong>Feature Computation</strong> Software computes all 13 geometric and texture measurements from the traced nuclear boundaries and outputs them in the lab report.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ── MEAN MEASUREMENTS ── -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="container section-block" style="padding-top:0;">
+        <div class="group-header fade-up">
+            <div class="group-header-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+                <h3>Group 1 — Mean Measurements</h3>
+                <p>The average value of each feature computed across all cell nuclei identified in the biopsy sample. These represent the typical characteristics of the nuclei.</p>
+            </div>
+        </div>
+
+        <!-- 1. Radius Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-circle-dot"></i></div>
+                <div class="flex-grow-1">
+                    <h5>1. Radius Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Average distance from nucleus centre to its boundary</small>
+                </div>
+                <span class="feature-code">radius_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 6.9 – 28.11 mm</span>
+                <p>The radius of a cell nucleus is computed as the mean distance from the centre of the nucleus to points on its perimeter. In practice, the pathology software traces the boundary of each nucleus and calculates the average of all radial distances from the centroid to the boundary points.</p>
+                <p>This is then averaged across all nuclei detected in the sample to produce <strong>radius_mean</strong>.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Micrometres (µm) — reported as a numeric value in your lab report</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">How to find in report</div>
+                        <div class="info-value">Listed as "Radius (mean)" or "Nuclear radius" in the FNA analysis section</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Malignant nuclei tend to be significantly larger than benign ones. A higher radius_mean is associated with more aggressive tumour behaviour. Values above ~17–18 are considered elevated.
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Texture Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-braille"></i></div>
+                <div class="flex-grow-1">
+                    <h5>2. Texture Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Standard deviation of grayscale pixel intensity values in the nucleus</small>
+                </div>
+                <span class="feature-code">texture_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 9.71 – 39.28</span>
+                <p>Texture describes how uniform or varied the internal appearance of a cell nucleus is in a grayscale microscopy image. It is computed as the <strong>standard deviation of the grayscale pixel intensity values</strong> within the nucleus boundary.</p>
+                <p>A low texture value means the nucleus appears uniform and smooth internally. A high texture value means the interior pixel intensities are highly variable — appearing mottled or irregular.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Grayscale standard deviation (unitless numeric)</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">How to find in report</div>
+                        <div class="info-value">Listed as "Texture (mean)" or "Nuclear texture" in FNA image analysis output</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Malignant nuclei often show more irregular internal texture due to abnormal chromatin distribution. Higher texture values suggest greater nuclear irregularity.
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Perimeter Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-draw-polygon"></i></div>
+                <div class="flex-grow-1">
+                    <h5>3. Perimeter Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Mean total boundary length of cell nuclei</small>
+                </div>
+                <span class="feature-code">perimeter_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 43.79 – 188.5</span>
+                <p>The perimeter is the total length of the boundary traced around each cell nucleus. It is computed by summing the distances between consecutive boundary points traced by the image analysis software around the nuclear edge.</p>
+                <p>The mean perimeter is the average of all nuclear perimeter lengths across the sample.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Micrometres (µm)</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Relationship to radius</div>
+                        <div class="info-value">For a perfect circle: perimeter ≈ 2π × radius. Irregular shapes have larger perimeters relative to their radius.</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Larger and more irregular nuclei have higher perimeters. Malignant cells tend to have irregular, jagged boundaries which inflate the perimeter beyond what a smooth circular nucleus of the same size would have.
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Area Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-vector-square"></i></div>
+                <div class="flex-grow-1">
+                    <h5>4. Area Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Mean cross-sectional area of cell nuclei</small>
+                </div>
+                <span class="feature-code">area_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 143.5 – 2501</span>
+                <p>The area is computed by counting the number of pixels enclosed within the traced nuclear boundary and converting to real-world units. It represents the cross-sectional area of the nucleus as seen in the 2D microscopy image.</p>
+                <p>This is one of the most directly interpretable features — it is essentially the size of the nucleus in the image plane.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Square micrometres (µm²)</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Model importance</div>
+                        <div class="info-value">One of the most predictive single features — strongly correlated with malignancy</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Cancer cells frequently have enlarged nuclei — a hallmark of malignancy visible even in basic histopathology. Area is one of the strongest individual predictors in this dataset.
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Compactness Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-compress"></i></div>
+                <div class="flex-grow-1">
+                    <h5>5. Compactness Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Ratio of perimeter² to area — measures shape regularity</small>
+                </div>
+                <span class="feature-code">compactness_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 0.019 – 0.34</span>
+                <p>Compactness is a shape metric computed as: <strong>(perimeter² / area) − 1.0</strong>. It measures how close a shape is to a perfect circle. A perfect circle has the minimum possible compactness value (0.0). As a shape becomes more irregular, elongated, or jagged, its compactness increases.</p>
+                <p>This feature is entirely derived from the perimeter and area — you will not see it directly in every report, but it is calculated automatically from those values.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Formula</div>
+                        <div class="info-value">(perimeter² ÷ area) − 1.0</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Interpretation</div>
+                        <div class="info-value">0 = perfect circle. Higher values = more irregular shape</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Malignant nuclei tend to be less compact — more irregular and non-circular. High compactness values suggest the nucleus boundary is jagged or elongated rather than smooth.
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Concavity Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="flex-grow-1">
+                    <h5>6. Concavity Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Severity of concave (inward) portions of the nucleus boundary</small>
+                </div>
+                <span class="feature-code">concavity_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 0.0 – 0.42</span>
+                <p>Concavity measures the severity of indentations in the nucleus boundary — specifically, how deeply the boundary curves inward (concave portions). The software identifies sections of the boundary where the outline dips inward relative to a convex hull fitted around the nucleus.</p>
+                <p>A smooth, round nucleus has zero or near-zero concavity. An irregular nucleus with deep indentations has high concavity.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed from</div>
+                        <div class="info-value">The difference between the actual nuclear boundary and its convex hull (the tightest convex shape that encloses it)</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Unitless ratio (0 = no concavities, higher = more indented)</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Malignant nuclei frequently show irregular, indented boundaries. High concavity is a strong marker of nuclear atypia — the abnormal shapes that pathologists look for in cancer diagnosis.
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Concave Points Mean -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-asterisk"></i></div>
+                <div class="flex-grow-1">
+                    <h5>7. Concave Points Mean</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Number of concave indentation points on nucleus boundary</small>
+                </div>
+                <span class="feature-code">concave points_mean</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 0.0 – 0.2012</span>
+                <p>While concavity measures the <em>depth/severity</em> of indentations, concave points counts the <em>number</em> of concave portions on the nuclear boundary. Each distinct inward curve that dips below the convex hull is counted as one concave point.</p>
+                <p>This is then averaged across all nuclei in the sample to give the mean concave points value.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Difference from concavity</div>
+                        <div class="info-value">Concavity = how deep the indentations are. Concave points = how many distinct indentations exist.</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Normalized count (number of concave segments ÷ total boundary segments)</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> More concave points mean a more complex, lobulated nuclear boundary. This is one of the most diagnostically significant features — it directly reflects the irregular, multi-lobed shapes typical of malignant nuclei.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- ── WORST MEASUREMENTS ── -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <div class="container section-block" style="padding-top:0;">
+        <div class="group-header fade-up">
+            <div class="group-header-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div>
+                <h3>Group 2 — Worst Measurements</h3>
+                <p>The largest or most extreme value observed across all cell nuclei in the sample. "Worst" does not mean worst outcome — it means the maximum recorded value for that feature.</p>
+            </div>
+        </div>
+
+        <!-- 8. Radius Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-circle-dot"></i></div>
+                <div class="flex-grow-1">
+                    <h5>8. Radius Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Largest nucleus radius observed in the sample</small>
+                </div>
+                <span class="feature-code">radius_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 7.93 – 36.04</span>
+                <p>Rather than the average, radius_worst captures the <strong>mean of the three largest radius values</strong> found in the sample. This highlights the most extreme nuclei — which pathologists often find diagnostically significant.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed as</div>
+                        <div class="info-value">Mean of the three largest nuclear radii in the sample</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Always ≥</div>
+                        <div class="info-value">radius_mean — because it captures the upper extreme values</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Even if average nuclear size is moderate, very large outlier nuclei indicate more aggressive behaviour. The worst values often carry more predictive power than the means in differentiating benign from malignant tumours.
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. Texture Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-grip-lines"></i></div>
+                <div class="flex-grow-1">
+                    <h5>9. Texture Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Most irregular nuclear texture in the sample</small>
+                </div>
+                <span class="feature-code">texture_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 12.02 – 49.54</span>
+                <p>Texture_worst is the mean of the three highest texture (grayscale standard deviation) values found in the sample. It identifies the nuclei with the most variable, irregular internal appearance.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed as</div>
+                        <div class="info-value">Mean of the three highest nuclear texture values</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Clinical relevance</div>
+                        <div class="info-value">Extremely irregular chromatin distribution is a hallmark of high-grade malignancy</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> The most texturally irregular nuclei in a sample are often the most abnormal. High texture_worst values suggest the presence of highly atypical nuclei even if most nuclei appear relatively normal.
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Perimeter Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-draw-polygon"></i></div>
+                <div class="flex-grow-1">
+                    <h5>10. Perimeter Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Largest nuclear boundary length in the sample</small>
+                </div>
+                <span class="feature-code">perimeter_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 50.41 – 251.2</span>
+                <p>The mean of the three largest nuclear perimeter values in the sample. Large perimeters indicate either very large nuclei, or nuclei with highly irregular jagged boundaries — or both.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed as</div>
+                        <div class="info-value">Mean of the three largest nuclear perimeter values</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Micrometres (µm)</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Large, jagged nuclear boundaries are characteristic of malignant cells. Perimeter_worst is particularly sensitive to the most extreme outlier nuclei in the sample.
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. Area Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-vector-square"></i></div>
+                <div class="flex-grow-1">
+                    <h5>11. Area Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Largest nuclear cross-sectional area in the sample</small>
+                </div>
+                <span class="feature-code">area_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 185.2 – 4254</span>
+                <p>The mean of the three largest nuclear area values in the sample. This is among the most powerful individual predictors of malignancy. Even a small number of very large nuclei in an otherwise normal-looking sample can be diagnostically significant.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed as</div>
+                        <div class="info-value">Mean of the three largest nuclear areas observed</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Model importance</div>
+                        <div class="info-value">Consistently ranks as one of the top 3 most predictive features in this dataset</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> The presence of even a few very large nuclei is a strong indicator of malignancy. Area_worst captures the most extreme nuclear enlargement in the entire sample.
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. Concavity Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="flex-grow-1">
+                    <h5>12. Concavity Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Most severe boundary indentation in the sample</small>
+                </div>
+                <span class="feature-code">concavity_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 0.0 – 1.252</span>
+                <p>The mean of the three highest concavity values found in the sample — representing the nuclei with the deepest boundary indentations. Notice the range extends to 1.252, significantly higher than concavity_mean's maximum of 0.42, reflecting how extreme the most irregular nuclei can be.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Why range is wider</div>
+                        <div class="info-value">Worst values capture only the 3 most extreme nuclei, not the full average — so outliers pull the value much higher</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Unit</div>
+                        <div class="info-value">Normalized ratio (higher = deeper boundary indentations)</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Very high concavity_worst values indicate the presence of nuclei with severely irregular, deeply indented boundaries — a key morphological marker of malignancy.
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. Concave Points Worst -->
+        <div class="measure-card fade-up">
+            <div class="measure-card-header" onclick="toggleCard(this)">
+                <div class="measure-icon"><i class="fa-solid fa-asterisk"></i></div>
+                <div class="flex-grow-1">
+                    <h5>13. Concave Points Worst</h5>
+                    <small style="color:var(--muted); font-size:.8rem;">Highest count of boundary indentation points in the sample</small>
+                </div>
+                <span class="feature-code">concave points_worst</span>
+                <i class="fa-solid fa-chevron-down chevron ms-3"></i>
+            </div>
+            <div class="measure-card-body">
+                <span class="range-badge"><i class="fa-solid fa-ruler"></i> Valid Range: 0.0 – 0.291</span>
+                <p>The mean of the three highest concave points values in the sample — representing the nuclei with the most distinct boundary indentations. This is consistently one of the most important features for distinguishing malignant from benign tumours.</p>
+                <div class="measure-info-grid">
+                    <div class="measure-info-item">
+                        <div class="info-label">Computed as</div>
+                        <div class="info-value">Mean of the three highest concave-points counts across all nuclei</div>
+                    </div>
+                    <div class="measure-info-item">
+                        <div class="info-label">Model importance</div>
+                        <div class="info-value">Frequently the single highest-importance feature in Random Forest analysis of this dataset</div>
+                    </div>
+                </div>
+                <div class="what-it-means">
+                    <strong>What it tells the model:</strong> Nuclei with many distinct concave points have extremely complex, multi-lobed shapes — a very strong indicator of malignancy. This feature often carries the highest predictive weight in the model.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── QUICK REFERENCE TABLE ── -->
+    <section class="quick-ref-section">
+        <i class="fa-solid fa-ribbon ribbon-watermark"></i>
+        <div class="container">
+            <div class="fade-up mb-4">
+                <h2 class="section-title">Quick Reference — All 13 Features</h2>
+                <p class="section-subtitle mt-1">A summary of every feature, its description, and valid input range for the screening tool.</p>
+            </div>
+            <div class="table-responsive fade-up" style="transition-delay:.1s; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,.1);">
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Feature Name</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Valid Range</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Radius Mean</td><td class="code-cell">radius_mean</td><td>Mean distance from nucleus centre to boundary</td><td class="range-cell">6.9 – 28.11</td></tr>
+                        <tr><td>2</td><td>Texture Mean</td><td class="code-cell">texture_mean</td><td>Std. dev. of grayscale pixel intensities (internal)</td><td class="range-cell">9.71 – 39.28</td></tr>
+                        <tr><td>3</td><td>Perimeter Mean</td><td class="code-cell">perimeter_mean</td><td>Mean total boundary length of cell nuclei</td><td class="range-cell">43.79 – 188.5</td></tr>
+                        <tr><td>4</td><td>Area Mean</td><td class="code-cell">area_mean</td><td>Mean cross-sectional area of cell nuclei</td><td class="range-cell">143.5 – 2501</td></tr>
+                        <tr><td>5</td><td>Compactness Mean</td><td class="code-cell">compactness_mean</td><td>Shape regularity (perimeter² ÷ area − 1)</td><td class="range-cell">0.019 – 0.34</td></tr>
+                        <tr><td>6</td><td>Concavity Mean</td><td class="code-cell">concavity_mean</td><td>Severity of inward curves on nucleus boundary</td><td class="range-cell">0.0 – 0.42</td></tr>
+                        <tr><td>7</td><td>Concave Points Mean</td><td class="code-cell">concave points_mean</td><td>Number of concave boundary segments (normalized)</td><td class="range-cell">0.0 – 0.2012</td></tr>
+                        <tr><td>8</td><td>Radius Worst</td><td class="code-cell">radius_worst</td><td>Mean of the 3 largest nucleus radii</td><td class="range-cell">7.93 – 36.04</td></tr>
+                        <tr><td>9</td><td>Texture Worst</td><td class="code-cell">texture_worst</td><td>Mean of the 3 highest texture values</td><td class="range-cell">12.02 – 49.54</td></tr>
+                        <tr><td>10</td><td>Perimeter Worst</td><td class="code-cell">perimeter_worst</td><td>Mean of the 3 largest nuclear perimeters</td><td class="range-cell">50.41 – 251.2</td></tr>
+                        <tr><td>11</td><td>Area Worst</td><td class="code-cell">area_worst</td><td>Mean of the 3 largest nuclear areas</td><td class="range-cell">185.2 – 4254</td></tr>
+                        <tr><td>12</td><td>Concavity Worst</td><td class="code-cell">concavity_worst</td><td>Mean of the 3 deepest boundary indentation values</td><td class="range-cell">0.0 – 1.252</td></tr>
+                        <tr><td>13</td><td>Concave Points Worst</td><td class="code-cell">concave points_worst</td><td>Mean of the 3 highest concave-point counts</td><td class="range-cell">0.0 – 0.291</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+        <div class="container fade-up">
+            <h2>Ready to Enter Your Values?</h2>
+            <p>Once you have your FNA biopsy report, enter all 13 values into our screening tool for a data-driven risk indication.</p>
+            <div class="cta-buttons">
+                <a href="/predict" class="btn-primary-rose"><i class="fa-solid fa-microscope me-2"></i>Check Risk Now</a>
+                <a href="/symptoms" class="btn-outline-rose">Learn Symptoms</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="mb-1">Educational purpose only — not a medical diagnosis or treatment tool.</p>
+        <p class="mb-0"><i class="fa-solid fa-ribbon me-1" style="color:var(--rose);"></i> Built with care by Amritanshu Mukund</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // accordion toggle
+        function toggleCard(header) {
+            const body = header.nextElementSibling;
+            const isOpen = body.classList.contains('open');
+            // close all
+            document.querySelectorAll('.measure-card-body').forEach(b => b.classList.remove('open'));
+            document.querySelectorAll('.measure-card-header').forEach(h => h.classList.remove('open'));
+            // open this one if it was closed
+            if (!isOpen) {
+                body.classList.add('open');
+                header.classList.add('open');
+            }
+        }
+
+        // scroll fade
+        const fadeObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+            });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+    </script>
+
+</body>
+</html>
